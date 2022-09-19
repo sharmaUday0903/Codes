@@ -1,0 +1,1 @@
+{"name":"Local: 55jumpGame","url":"c:\\Users\\udays\\Desktop\\code\\55jumpGame.cpp","tests":[{"id":1663430819088,"input":"2\n3\n1\n1\n4","output":"YES"},{"id":1663430830354,"input":"3\n2\n1\n0\n4","output":"NO"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\udays\\Desktop\\code\\55jumpGame.cpp","group":"local","local":true}
