@@ -24,49 +24,41 @@ signed main()
     cin >> t;
     REP(i, 0, t)
     {
-        int n, k;
-        cin >> n >> k;
-        set<int> s;
-        map<int, int> m;
+        int n;
+        cin >> n;
         int a[n];
         REP(i, 0, n)
         {
             cin >> a[i];
-            m[a[i]]++;
         }
-        REP(i, 1, 2 * n + 1)
+        vector<int> v;
+        bool u = true;
+        v.pb(a[0]);
+        REP(i, 1, n)
         {
-            if (m[i] == 0)
+            int p = v.back() + a[i];
+            int q = v.back() - a[i];
+            if (p > 0 && q > 0 && p!=q)
             {
-                s.insert(i);
+                u = false;
+                break;
+            }
+            else
+            {
+                v.pb(p);
             }
         }
-        int mx=*max_element(a,a+n);
-        int ans1 = 0;
-        if (s.find(2 * n) != s.end())
+        if (u)
         {
-            k--;
-            s.erase(2 * n);
+            for (auto c : v)
+            {
+                cout << c << " ";
+            }
+            cout << endl;
         }
-        REP(i,0,k)
+        else
         {
-            auto c=*s.begin();
-            int p = c;
-            int q = 2*n-p;
-            ans1+=q;
-            s.erase(p);
+            cout << -1 << endl;
         }
-        int ans2=0;
-        REP(i,0,k)
-        {
-            auto c=*s.begin();
-            int p =c;
-            int q = mx-p;
-            int zero=0;
-            ans2+=max(q,zero);
-        }
-        int ans=max(ans1,ans2);
-        cout<<ans<<endl;
-
     }
 }

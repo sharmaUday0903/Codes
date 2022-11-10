@@ -24,49 +24,47 @@ signed main()
     cin >> t;
     REP(i, 0, t)
     {
-        int n, k;
-        cin >> n >> k;
-        set<int> s;
-        map<int, int> m;
+        int n;
+        cin >> n;
+        int cnt0 = 0;
+        int cnt1 = 0;
         int a[n];
         REP(i, 0, n)
         {
             cin >> a[i];
-            m[a[i]]++;
-        }
-        REP(i, 1, 2 * n + 1)
-        {
-            if (m[i] == 0)
+            if (a[i] % 2 == 0)
             {
-                s.insert(i);
+                cnt0++;
+            }
+            else
+            {
+                cnt1++;
             }
         }
-        int mx=*max_element(a,a+n);
-        int ans1 = 0;
-        if (s.find(2 * n) != s.end())
+        if (cnt1 % 4 == 2)
         {
-            k--;
-            s.erase(2 * n);
+            cout << "Bob\n";
         }
-        REP(i,0,k)
+        else if (cnt1 % 4 == 0)
         {
-            auto c=*s.begin();
-            int p = c;
-            int q = 2*n-p;
-            ans1+=q;
-            s.erase(p);
+            cout << "Alice\n";
+            /* code */
         }
-        int ans2=0;
-        REP(i,0,k)
+        else if (cnt1 % 4 == 3)
         {
-            auto c=*s.begin();
-            int p =c;
-            int q = mx-p;
-            int zero=0;
-            ans2+=max(q,zero);
+            cout << "Alice\n";
+            /* code */
         }
-        int ans=max(ans1,ans2);
-        cout<<ans<<endl;
-
+        else
+        {
+            if (cnt0 % 2 == 0)
+            {
+                cout << "Bob\n";
+            }
+            else
+            {
+                cout << "Alice\n";
+            }
+        }
     }
 }

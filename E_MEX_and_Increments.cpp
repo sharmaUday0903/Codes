@@ -24,9 +24,8 @@ signed main()
     cin >> t;
     REP(i, 0, t)
     {
-        int n, k;
-        cin >> n >> k;
-        set<int> s;
+        int n;
+        cin >> n;
         map<int, int> m;
         int a[n];
         REP(i, 0, n)
@@ -34,39 +33,37 @@ signed main()
             cin >> a[i];
             m[a[i]]++;
         }
-        REP(i, 1, 2 * n + 1)
+        sort(a, a + n);
+        vi ans(n + 1, -1);
+        ans[0] = m[0];
+        int sum = 0;
+        vi v;
+        REP(i,0,m[0]-1)
         {
-            if (m[i] == 0)
+            v.pb(0);
+        }
+        REP(i, 0, n)
+        {
+            if (a[i] > i)
             {
-                s.insert(i);
+                break;
+            }
+            ans[i + 1] = sum + m[i + 1];
+            while (m[i + 1]--)
+            {
+                v.pb(i + 1);
+            }
+            if (!v.empty())
+            {
+                sum += i + 1 - v.back();
+                v.pop_back();
             }
         }
-        int mx=*max_element(a,a+n);
-        int ans1 = 0;
-        if (s.find(2 * n) != s.end())
-        {
-            k--;
-            s.erase(2 * n);
-        }
-        REP(i,0,k)
-        {
-            auto c=*s.begin();
-            int p = c;
-            int q = 2*n-p;
-            ans1+=q;
-            s.erase(p);
-        }
-        int ans2=0;
-        REP(i,0,k)
-        {
-            auto c=*s.begin();
-            int p =c;
-            int q = mx-p;
-            int zero=0;
-            ans2+=max(q,zero);
-        }
-        int ans=max(ans1,ans2);
-        cout<<ans<<endl;
 
+        for (auto c : ans)
+        {
+            cout << c << " ";
+        }
+        cout << endl;
     }
 }

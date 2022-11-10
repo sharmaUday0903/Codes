@@ -1,3 +1,5 @@
+// author : Uday Sharma
+// 2022-10-28 17:12:07
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -15,6 +17,7 @@ using namespace std;
 #define vi vector<int>
 #define sortv(v) sort(v.begin(), v.end())
 #define sortrev(v) sort(v.begin(), v.end(), greater<int>())
+#define inf 1000000000000000005
 #define int long long int
 
 signed main()
@@ -26,47 +29,22 @@ signed main()
     {
         int n, k;
         cin >> n >> k;
-        set<int> s;
-        map<int, int> m;
         int a[n];
         REP(i, 0, n)
         {
             cin >> a[i];
-            m[a[i]]++;
         }
-        REP(i, 1, 2 * n + 1)
+        int ans = inf;
+        REP(v, 1, a[0] + 1)
         {
-            if (m[i] == 0)
+            int cm = v;
+            REP(i, 0, n)
             {
-                s.insert(i);
+                int p = min(k, (v ? (a[i] / v) : k));
+                cm=max(cm,a[i]/p);
             }
+            ans=min(ans,cm-v);
         }
-        int mx=*max_element(a,a+n);
-        int ans1 = 0;
-        if (s.find(2 * n) != s.end())
-        {
-            k--;
-            s.erase(2 * n);
-        }
-        REP(i,0,k)
-        {
-            auto c=*s.begin();
-            int p = c;
-            int q = 2*n-p;
-            ans1+=q;
-            s.erase(p);
-        }
-        int ans2=0;
-        REP(i,0,k)
-        {
-            auto c=*s.begin();
-            int p =c;
-            int q = mx-p;
-            int zero=0;
-            ans2+=max(q,zero);
-        }
-        int ans=max(ans1,ans2);
         cout<<ans<<endl;
-
     }
 }

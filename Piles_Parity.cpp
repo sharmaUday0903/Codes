@@ -24,49 +24,39 @@ signed main()
     cin >> t;
     REP(i, 0, t)
     {
-        int n, k;
-        cin >> n >> k;
-        set<int> s;
-        map<int, int> m;
+        int n;
+        cin >> n;
         int a[n];
         REP(i, 0, n)
         {
             cin >> a[i];
-            m[a[i]]++;
         }
-        REP(i, 1, 2 * n + 1)
+        int cnt = 0;
+        int cnt1 = 0;
+        REP(i, 0, n)
         {
-            if (m[i] == 0)
+            if (i % 2 != a[i] % 2)
             {
-                s.insert(i);
+                cnt1++;
             }
+            else if (i % 2 == a[i] % 2 && i%2==0)
+            {
+                cnt1+=2;
+            }
+            else if (i % 2 == a[i] % 2 && i%2!=0&&a[i]!=1)
+            {
+                cnt1++;
+            }
+            
         }
-        int mx=*max_element(a,a+n);
-        int ans1 = 0;
-        if (s.find(2 * n) != s.end())
+        int p = cnt1;
+        if (p % 2 == 0)
         {
-            k--;
-            s.erase(2 * n);
+            cout << "CHEFINA\n";
         }
-        REP(i,0,k)
+        else
         {
-            auto c=*s.begin();
-            int p = c;
-            int q = 2*n-p;
-            ans1+=q;
-            s.erase(p);
+            cout << "CHEF\n";
         }
-        int ans2=0;
-        REP(i,0,k)
-        {
-            auto c=*s.begin();
-            int p =c;
-            int q = mx-p;
-            int zero=0;
-            ans2+=max(q,zero);
-        }
-        int ans=max(ans1,ans2);
-        cout<<ans<<endl;
-
     }
 }
