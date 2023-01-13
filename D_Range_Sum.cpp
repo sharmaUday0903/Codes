@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-11-26 17:14:49
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -24,48 +24,50 @@ void solve()
 {
     int n;
     cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
-    REP(i, 0, n)
+    if (n % 2)
     {
-        cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
+        vi v;
+        int p = (n / 2)+1;
+        while (v.size() != n)
+        {
+            v.pb(p+2);
+            p++;
+        }
+        v[0]--;
+        v[n-1]++;
+        v[n-2]++;
+        for (auto c : v)
+            cout << c << " ";
+            cout<<endl;
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    else
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
+        int idx = n - 1;
+        int cnt = 0;
+        while (true)
         {
-            p = sqrt(p);
-            ans1++;
+            cout << idx << " ";
+            idx--;
+            cnt += 2;
+            if (cnt == n)
+            {
+                break;
+            }
         }
-        m1.erase(m1.find(a[i]));
+        idx = n + 1;
+        cnt = 0;
+        while (true)
+        {
+            cout << idx << " ";
+            idx++;
+            cnt += 2;
+            if (cnt == n)
+            {
+                break;
+            }
+        }
+        cout << endl;
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
-    {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
-        {
-            ans2 = INT64_MAX;
-            break;
-        }
-
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
-    }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
 }
 signed main()
 {

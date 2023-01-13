@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-12-20 21:40:56
+// 2022-12-31 14:34:54
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -20,27 +20,40 @@ using namespace std;
 #define inf 1000000000000000005
 #define int long long int
 
+const int MOD = 998244353;
+
+int power(int x, int y, int mod)
+{
+    int res = 1;
+    x = x % mod;
+    if (x == 0)
+        return 0;
+    while (y)
+    {
+        if (y % 2)
+        {
+            res = (res * x) % mod;
+        }
+        y = y >> 1;
+        x = (x * x) % mod;
+    }
+    return res;
+}
+int inversemod(int n, int mod)
+{
+    return power(n, mod - 2, MOD) % MOD;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    int cnt = 0;
-    REP(i, 0, n - 1)
-    {
-        if (s[i] != s[i + 1])
-        {
-            cnt++;
-        }
-    }
-    int zero = 0;
-    if (s[0] == '1')
-    {
-        cout << cnt << endl;
-    }
-    else
-        cout << max(zero, cnt - 1) << endl;
+    int a, b;
+    cin >> a >> b;
+    int n = a + b;
+    int k = (n + 1) / 2;
+    int ans=(a*k)%MOD;
+    ans*=inversemod(n,MOD);
+    ans%=MOD;
+    cout<<ans<<endl;
 }
 signed main()
 {

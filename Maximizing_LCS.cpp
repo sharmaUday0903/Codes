@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-12-20 21:40:56
+// 2022-12-30 15:17:08
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -20,27 +20,47 @@ using namespace std;
 #define inf 1000000000000000005
 #define int long long int
 
+int lcs(string s, string r)
+{
+    int n = s.size();
+    int adj[n + 1][n + 1];
+
+    REP(i, 0, n + 1)
+    {
+        REP(j, 0, n + 1)
+        {
+            if (i == 0 || j == 0)
+            {
+                adj[i][j] = 0;
+            }
+            else if (s[i - 1] == r[j - 1])
+            {
+                adj[i][j] = adj[i - 1][j - 1] + 1;
+            }
+            else
+            {
+                adj[i][j] = max(adj[i - 1][j], adj[i][j - 1]);
+            }
+        }
+    }
+
+    int ans = 0;
+    REP(i, 1, n + 1)
+    {
+        ans = max(ans, adj[i][n - i]);
+    }
+    return ans;
+}
+
 void solve()
 {
     int n;
-    cin >> n;
     string s;
-    cin >> s;
-    int cnt = 0;
-    REP(i, 0, n - 1)
-    {
-        if (s[i] != s[i + 1])
-        {
-            cnt++;
-        }
-    }
-    int zero = 0;
-    if (s[0] == '1')
-    {
-        cout << cnt << endl;
-    }
-    else
-        cout << max(zero, cnt - 1) << endl;
+    cin >> n >> s;
+    string r = s;
+    reverse(r.begin(), r.end());
+
+    cout << lcs(s, r) << endl;
 }
 signed main()
 {

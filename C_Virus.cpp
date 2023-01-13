@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-12-17 14:37:04
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,50 +22,52 @@ using namespace std;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
-    REP(i, 0, n)
+    int n, m;
+    cin >> n >> m;
+    vi b(m + 1, 0);
+    REP(i, 1, m + 1)
     {
-        cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
+        cin >> b[i];
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    sortv(b);
+    if (m == 1)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
-        {
-            p = sqrt(p);
-            ans1++;
-        }
-        m1.erase(m1.find(a[i]));
+        cout << 2 << endl;
+        return;
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    vi a;
+    a.pb(0);
+    REP(i, 1, m)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
-        {
-            ans2 = INT64_MAX;
-            break;
-        }
-
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
+        a.pb(b[i + 1] - b[i] - 1);
     }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
+    a.pb(n - b[m] + b[1] - 1);
+    sortv(a);
+    int days = 0;
+    int ans = m;
+    REPREV(i, 1, m + 1)
+    {
+        int curr = a[i] - 2 * days;
+        if (curr <= 0)
+        {
+            ans += a[i];
+        }
+        else
+        {
+            ans += 2 * days;
+            days += 2;
+            if (curr > 1)
+            {
+                ans++;
+            }
+            if (curr==1)
+            {
+                days--;
+            }
+            
+        }
+    }
+    cout<<ans<<endl;
 }
 signed main()
 {

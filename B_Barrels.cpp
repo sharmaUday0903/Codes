@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-12 02:10:36
+// 2022-12-16 19:36:16
 #include<bits/stdc++.h>
 #define fast  ios_base::sync_with_stdio(false); cin.tie(NULL);
 using namespace std;
@@ -20,9 +20,24 @@ using namespace std;
 
 void solve()
 {
-	char a='1';
-	int b=48-'0';
-	cout<<b<<endl;
+    int n,k;
+    cin>>n>>k;
+    vi a(n);
+    REP(i,0,n)cin>>a[i];
+    sortv(a);
+    int ans=a[n-1];
+    int j=n-2;
+    int cnt=0;
+    while (cnt!=k)
+    {
+        ans+=a[j];
+        j--;
+
+        cnt++;
+    }
+    
+    cout<<ans<<endl;
+
 }
 signed main(){
 fast;
@@ -30,7 +45,7 @@ int t;
 t=1;
 cin>>t;
 while(t--)
-	{
-	solve();
-	}
+    {
+    solve();
+    }
 }

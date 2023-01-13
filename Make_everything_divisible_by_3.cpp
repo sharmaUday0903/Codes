@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-12-14 20:54:22
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -24,47 +24,59 @@ void solve()
 {
     int n;
     cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
+    int cnt0 = 0, cnt1 = 0, cnt2 = 0;
+    vi a(n);
     REP(i, 0, n)
     {
         cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
-    }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
-    {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
+        if (a[i] % 3 == 0)
         {
-            p = sqrt(p);
-            ans1++;
+            cnt0++;
         }
-        m1.erase(m1.find(a[i]));
-    }
-    int ans2 = 0;
-    REPREV(i, 1, n)
-    {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
+        else if (a[i] % 3 == 1)
         {
-            ans2 = INT64_MAX;
-            break;
+            cnt1++;
         }
+        else
+        {
+            cnt2++;
+        }
+    }
+    int p = max(cnt1, cnt2);
+    int q = min(cnt1, cnt2);
 
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
+    int diff = p - q;
+    if (p == 0 && q == 0)
+    {
+        cout << 0 << endl;
+        return;
+        /* code */
     }
-    int ans = min(ans1, ans2);
+    if (diff == 0)
+    {
+
+        cout << p << endl;
+        return;
+    }
+
+    int x = diff / 4;
+    int y = diff % 4;
+    int ans = 0;
+    if (y == 1)
+    {
+        ans += 6;
+    }
+    if (y == 2)
+    {
+        ans += 5;
+    }
+    if (y == 3)
+    {
+        ans += 4;
+    }
+    int r = x * 3;
+    ans += r;
+    ans+=q;
     cout << ans << endl;
 }
 signed main()

@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-12-26 00:44:33
+// 2022-12-19 20:53:33
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,28 +22,47 @@ using namespace std;
 
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
+    int n;
+    cin >> n;
     vi a(n);
     REP(i, 0, n)
     cin >> a[i];
-    REP(i, 0, n)
-    a[i] += x;
-    vi ans(n + 2, 0);
+    /* code */
     int p = *max_element(a.begin(), a.end());
-    ans[1] = max(p, ans[0]);
-    REP(i,2,n+2)
+    if (n >= 4)
     {
-        
+        int ans = n * p;
+        cout << ans << endl;
     }
-
-    REP(i,1,n+2)
+    else
     {
-        cout<<ans[i]<<" ";
+        if (n == 2)
+        {
+            int ans1 = a[0] + a[1];
+            int ans2 = 2 * abs(a[0] - a[1]);
+            int ans = max(ans1, ans2);
+            cout << ans << endl;
+        }
+        else
+        {
+            if (p == a[0] ||p== a[2])
+            {
+                int ans = p * 3;
+                cout << ans << endl;
+            }
+            else
+            {
+                int ans1 = a[0] + a[1] + a[2];
+                int ans2 = max(a[0], a[2]);
+                ans2 *= 3;
+                int ans3 = p - min(a[0], a[2]);
+                ans3*=3;
+                int ans=max({ans1,ans2,ans3});
+                cout<<ans<<endl;
+            }
+        }
     }
-    cout<<endl;
 }
-
 signed main()
 {
     fast;

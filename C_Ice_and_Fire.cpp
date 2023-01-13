@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-12-18 01:49:57
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -24,48 +24,27 @@ void solve()
 {
     int n;
     cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
-    REP(i, 0, n)
-    {
-        cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
-    }
-    int ans1 = 0;
+    string s;
+    cin >> s;
+    vi ans;
+    int k = 0;
     REP(i, 0, n - 1)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
+        if (i > 0 && s[i - 1] == s[i])
         {
-            p = sqrt(p);
-            ans1++;
+            k += 1;
         }
-        m1.erase(m1.find(a[i]));
+        else
+        {
+            k = 1;
+        }
+        ans.pb(i+2-k);
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    for (auto c : ans)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
-        {
-            ans2 = INT64_MAX;
-            break;
-        }
-
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
+        cout << c << " ";
     }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
+    cout << endl;
 }
 signed main()
 {

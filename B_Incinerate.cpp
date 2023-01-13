@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-12-19 20:06:40
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,50 +22,59 @@ using namespace std;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
+    int n, k;
+    cin >> n >> k;
+    vi a(n), b(n);
     REP(i, 0, n)
     {
         cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    REP(i, 0, n)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
-        {
-            p = sqrt(p);
-            ans1++;
-        }
-        m1.erase(m1.find(a[i]));
+        cin >> b[i];
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    multiset<pair<int, int>> m;
+    REP(i, 0, n)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
-        {
-            ans2 = INT64_MAX;
-            break;
-        }
+        m.insert({b[i], a[i]});
+    }
 
-        while (p < q)
+    vi ans;
+    int val = k;
+    int sum = 0;
+    bool u = true;
+    int p = *max_element(a.begin(), a.end());
+    while (val > 0 && p > 0&&!m.empty())
+    {
+        p -= val;
+        sum += val;
+        while (!m.empty())
         {
-            p = (p) * (p);
-            ans2++;
+            auto y = *m.begin();
+            if (y.second <= sum)
+            {
+                m.erase(m.find(y));
+            }
+            else
+            {
+                break;
+            }
         }
-        m2.erase(m2.find(a[i]));
+        if (!m.empty())
+        {
+            auto z=*m.begin();
+            val-=z.first;
+        }
+        
     }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
+    
+
+    if (p<=0)
+    {
+        cout << "YES\n";
+    }
+    else
+        cout << "NO\n";
 }
 signed main()
 {

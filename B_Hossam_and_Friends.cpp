@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-12-20 21:40:56
+// 2022-12-13 23:56:50
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,25 +22,32 @@ using namespace std;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    int cnt = 0;
-    REP(i, 0, n - 1)
+    int n, m;
+    cin >> n >> m;
+    vector<vi> adj(n + 1);
+    REP(i, 0, m)
     {
-        if (s[i] != s[i + 1])
+        int x, y;
+        cin >> x >> y;
+        adj[x].pb(y);
+        adj[y].pb(x);
+    }
+    vector<int> dp(n + 1, inf);
+    dp[1] = 1;
+    int ans = 1;
+    REP(i, 2, n + 1)
+    {
+        dp[i] = dp[i - 1];
+        for (auto x : adj[i])
         {
-            cnt++;
+            if (x < i)
+            {
+                dp[i] = max(dp[i], x + 1);
+            }
         }
+        ans+=(i+1-dp[i]);
     }
-    int zero = 0;
-    if (s[0] == '1')
-    {
-        cout << cnt << endl;
-    }
-    else
-        cout << max(zero, cnt - 1) << endl;
+    cout<<ans<<endl;
 }
 signed main()
 {

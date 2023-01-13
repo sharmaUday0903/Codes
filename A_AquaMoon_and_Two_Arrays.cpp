@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-12-15 18:07:34
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -24,48 +24,52 @@ void solve()
 {
     int n;
     cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
+    vi a(n), b(n);
+    int sum1 = 0, sum2 = 0;
     REP(i, 0, n)
     {
         cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
+        sum1 += a[i];
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    REP(i, 0, n)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
-        {
-            p = sqrt(p);
-            ans1++;
-        }
-        m1.erase(m1.find(a[i]));
+        cin >> b[i];
+        sum2 += b[i];
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    if (sum1 == sum2)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
+        vi ans1, ans2;
+        REP(i, 0, n)
         {
-            ans2 = INT64_MAX;
-            break;
+            if (a[i] > b[i])
+            {
+                int p = a[i] - b[i];
+                while (p)
+                {
+                    ans1.pb(i + 1);
+                    p--;
+                }
+            }
+            else if (a[i] < b[i])
+            {
+                int p = b[i] - a[i];
+                while (p)
+                {
+                    ans2.pb(i + 1);
+                    p--;
+                }
+            }
         }
-
-        while (p < q)
+        cout<<ans1.size()<<endl;
+        REP(i,0,ans1.size())
         {
-            p = (p) * (p);
-            ans2++;
+            cout<<ans1[i]<<" "<<ans2[i]<<endl;
         }
-        m2.erase(m2.find(a[i]));
     }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
+    else
+    {
+        cout << -1 << endl;
+    }
 }
 signed main()
 {

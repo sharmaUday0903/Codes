@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-12-14 20:05:54
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,49 +22,52 @@ using namespace std;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
+    int n, k;
+    cin >> n >> k;
+    vi a(n), b(n);
     REP(i, 0, n)
     {
         cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    REP(i, 0, n)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
-        {
-            p = sqrt(p);
-            ans1++;
-        }
-        m1.erase(m1.find(a[i]));
+        cin >> b[i];
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    int N = 1e5 + 5;
+    vector<int> m(N + 1, -1);
+    REP(i, 0, n)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
+        if (m[a[i]] == -1)
         {
-            ans2 = INT64_MAX;
-            break;
+            m[a[i]] = b[i];
         }
+        else
+        {
+            m[a[i]] = min(m[a[i]], b[i]);
+        }
+    }
+    vi aa;
+    for (auto c : m)
+    {
+        if (c != -1)
+        {
+            /* code */
+            aa.pb(c);
+        }
+    }
+    sortv(aa);
+    if (aa.size() < k)
+    {
+        // cout << aa.size() << endl;
+        cout << -1 << endl;
+        return;
+        /* code */
+    }
 
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
-    }
-    int ans = min(ans1, ans2);
+    int ans = 0;
+
+    REP(i, 0, k)
+    ans += aa[i];
     cout << ans << endl;
 }
 signed main()

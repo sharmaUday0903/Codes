@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-11-26 21:07:14
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -19,60 +19,58 @@ using namespace std;
 #define sortrev(v) sort(v.begin(), v.end(), greater<int>())
 #define inf 1000000000000000005
 #define int long long int
+int power(int x, int y, int mod)
+{
+    int res = 1;
+    x = x % mod;
+    if (x == 0)
+        return 0;
+    while (y)
+    {
+        if (y % 2)
+        {
+            res = (res * x) % mod;
+        }
+        y = y >> 1;
+        x = (x * x) % mod;
+    }
+    return res;
+}
 
 void solve()
 {
-    int n;
-    cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
-    REP(i, 0, n)
+    int n, p;
+    cin >> n >> p;
+    int ans = 0;
+    int cnt = 1;
+    int y = (n * (n - 3)) / 2;
+    if (y + 1 < n)
     {
-        cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
+        REPREV(i, y + 1, n + 1)
+        {
+            int pp = (cnt * i) % p;
+            ans = (ans + pp) % p;
+            cnt = pp;
+        }
+        cout << ans << endl;
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    else
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
+        REPREV(i, n , y+2)
         {
-            p = sqrt(p);
-            ans1++;
+            int pp = (cnt * i) % p;
+            ans = (ans + pp) % p;
+            cnt = pp;
         }
-        m1.erase(m1.find(a[i]));
+        cout << ans << endl;
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
-    {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
-        {
-            ans2 = INT64_MAX;
-            break;
-        }
-
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
-    }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
 }
 signed main()
 {
     fast;
     int t;
     t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         solve();

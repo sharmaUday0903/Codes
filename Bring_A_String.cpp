@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-12-16 14:32:41
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,50 +22,38 @@ using namespace std;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
-    REP(i, 0, n)
+    string a, b;
+    cin >> a >> b;
+    int n = a.size();
+    int m = b.size();
+    int g = __gcd(n, m);
+    int l = n * m;
+    l /= g;
+    int p = l / n;
+    string ans1="";
+    REP(i, 0, p)
     {
-        cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
+        REP(j, 0, n)
+        {
+            ans1 += a[j];
+        }
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    int q = l / m;
+    string ans2="";
+    REP(i, 0, q)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
+        REP(j, 0, m)
         {
-            p = sqrt(p);
-            ans1++;
+            ans2 += b[j];
         }
-        m1.erase(m1.find(a[i]));
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    // cout<<ans1<<" "<<ans2<<endl;
+    if (ans1 == ans2)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
-        {
-            ans2 = INT64_MAX;
-            break;
-        }
-
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
+        cout << ans1 << endl;
     }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
+    else
+        cout << -1 << endl;
 }
 signed main()
 {

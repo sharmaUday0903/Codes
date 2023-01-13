@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-12 02:10:36
+// 2022-12-16 13:36:59
 #include<bits/stdc++.h>
 #define fast  ios_base::sync_with_stdio(false); cin.tie(NULL);
 using namespace std;
@@ -20,9 +20,19 @@ using namespace std;
 
 void solve()
 {
-	char a='1';
-	int b=48-'0';
-	cout<<b<<endl;
+    int a,b,c,d,e,f,g,h;
+    cin>>a>>b>>c>>d>>e>>f>>g>>h;
+    int a1=abs(a*(d-h)+c*(h-b)+g*(b-d));
+    int a2=abs(c*(f-h)+e*(h-d)+g*(d-f));
+    int a3=abs(a*(f-h)+e*(h-b)+g*(b-f));
+    int area=abs(a*(d-f)+c*(f-b)+e*(b-d));
+    if (area==a1+a2+a3)
+    {
+        cout<<"True\n";
+    }
+    else cout<<"False\n";
+    
+    
 }
 signed main(){
 fast;
@@ -30,7 +40,7 @@ int t;
 t=1;
 cin>>t;
 while(t--)
-	{
-	solve();
-	}
+    {
+    solve();
+    }
 }

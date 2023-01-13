@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-11-22 02:44:46
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,50 +22,50 @@ using namespace std;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    multiset<int> m1, m2;
-    int a[n];
-    REP(i, 0, n)
+    int n, a, b;
+    cin >> n >> a >> b;
+    a--, b--;
+    vector<vector<array<int, 2>>> adj(n);
+    REP(i, 1, n)
     {
-        cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
+        int x, y, z;
+        cin >> x >> y >> z;
+        x--, y--;
+        adj[x].pb({y, z});
+        adj[y].pb({x, z});
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    vi f(n);
+    set<int> s;
+    function<void(int, int, int)> dfs = [&](int x, int t, int p)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
+        if (x != b)
+            s.insert(f[x]);
+        for (auto [y, z] : adj[x])
         {
-            p = sqrt(p);
-            ans1++;
+            if (y==p||y==t)
+            {
+                continue;
+            }
+            f[y]=f[x]^z;
+            dfs(y,t,x);
         }
-        m1.erase(m1.find(a[i]));
-    }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    };
+    f[a]=0;
+    dfs(a,b,-1);
+    auto t=s;
+    s.clear();
+    f[b]=0;
+    dfs(b,-1,-1);
+    for(auto x:s)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
+        if (t.count(x))
         {
-            ans2 = INT64_MAX;
-            break;
+            cout<<"YES\n";
+            return;
         }
-
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
+        
     }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
+    cout<<"NO\n";
 }
 signed main()
 {

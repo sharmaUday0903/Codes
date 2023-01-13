@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-09 22:21:57
+// 2022-11-29 12:30:32
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -22,50 +22,42 @@ using namespace std;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    multiset<int> m1, m2;
+    int n, m;
+    cin >> n >> m;
     int a[n];
+    int sum = 0;
+    vi v;
     REP(i, 0, n)
     {
         cin >> a[i];
-        m1.insert(a[i]);
-        m2.insert(a[i]);
+        sum += a[i];
+        if (sum > 0)
+        {
+            v.pb(sum);
+        }
+        else
+        {
+            if (!v.empty())
+            {
+                v.pb(v.back());
+            }
+            else
+            {
+                v.pb(sum);
+            }
+            
+        }
     }
-    int ans1 = 0;
-    REP(i, 0, n - 1)
+    for(auto c:v)
     {
-        int p = a[i];
-        auto qq = *m1.begin();
-        int q = qq;
-        while (p > q)
-        {
-            p = sqrt(p);
-            ans1++;
-        }
-        m1.erase(m1.find(a[i]));
+        cout<<c<<" ";
     }
-    int ans2 = 0;
-    REPREV(i, 1, n)
+    cout<<endl;
+    REP(i,0,m)
     {
-        int p = a[i];
-        auto qq = *m2.rbegin();
-        int q = qq;
-        if (p == 1)
-        {
-            ans2 = INT64_MAX;
-            break;
-        }
-
-        while (p < q)
-        {
-            p = (p) * (p);
-            ans2++;
-        }
-        m2.erase(m2.find(a[i]));
+        int x;
+        cin>>x;
     }
-    int ans = min(ans1, ans2);
-    cout << ans << endl;
 }
 signed main()
 {
