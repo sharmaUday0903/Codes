@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2023-01-18 23:43:29
+// 2023-01-25 20:42:55
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -60,31 +60,55 @@ void solve()
 {
     int n, m;
     cin >> n >> m;
-    vi dp(m + 1, 0);
+    vi a(n);
+    map<int, int> w;
     REP(i, 0, n)
     {
-        int x;
-        cin >> x;
-        dp[x]++;
+        cin >> a[i];
+        w[a[i]]++;
     }
-    vi a(m);
+    vi b(m);
     REP(i, 0, m)
-    cin >> a[i];
-    REP(i, 2, m + 1)
-    dp[i] += dp[i - 1];
-    int ans = 0;
-    REP(i, 1, m + 1)
     {
-        int candies=0;
-        REP(j,1,(m/i)+1)
-        {
-            int l = j*i;
-            int r =min(m,(j+1)*i-1);
-            candies+=(dp[r]-dp[l-1])*j;
-        }
-        ans=max(ans,candies*a[i-1]);
+        cin >> b[i];
+        b[i]--;
     }
-    cout<<ans<<endl;
+    int ans = m;
+    vi v;
+    for (auto c : w)
+        v.pb(c.s);
+    sortrev(v);
+
+    if (m > v.size())
+    {
+        int h = m / v.size();
+        int g = m % v.size();
+        REP(i, 0, v.size())
+        {
+            v[i] -= h;
+        }
+        REP(i, 0, g)
+        {
+            v[i]--;
+        }
+        sortrev(v);
+        REP(i, v.size(), m)
+        b[i]++;
+        sortrev(b);
+        REP(i, 0, v.size())
+        {
+            ans += min(v[i], b[i]);
+        }
+        cout << ans << endl;
+        return;
+    }
+    REP(i, 0, m)
+    v[i]--;
+    REP(i, 0, m)
+    {
+        ans += min(v[i], b[i]);
+    }
+    cout << ans << endl;
 }
 signed main()
 {

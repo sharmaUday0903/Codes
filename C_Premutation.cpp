@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2023-01-18 23:43:29
+// 2023-01-28 02:07:13
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -58,33 +58,52 @@ int inversemod(int n, int mod)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    vi dp(m + 1, 0);
+    int n;
+    cin >> n;
+    vvi v(n, vi(n - 1));
     REP(i, 0, n)
     {
-        int x;
-        cin >> x;
-        dp[x]++;
-    }
-    vi a(m);
-    REP(i, 0, m)
-    cin >> a[i];
-    REP(i, 2, m + 1)
-    dp[i] += dp[i - 1];
-    int ans = 0;
-    REP(i, 1, m + 1)
-    {
-        int candies=0;
-        REP(j,1,(m/i)+1)
+        REP(j, 0, n - 1)
         {
-            int l = j*i;
-            int r =min(m,(j+1)*i-1);
-            candies+=(dp[r]-dp[l-1])*j;
+            cin >> v[i][j];
         }
-        ans=max(ans,candies*a[i-1]);
     }
-    cout<<ans<<endl;
+    vi ans;
+    map<int, int> m;
+    REP(i, 0, n - 1)
+    {
+        REP(j, 0, n)
+        {
+            int p = v[j][i];
+            m[p]++;
+        }
+        
+        for (auto c : m)
+        {
+
+            if (c.s == n - 1)
+            {
+                ans.pb(c.f);
+                m[c.f] = 0;
+            }
+        }
+        if (i == n - 3)
+        {
+            for (auto c : m)
+            {
+
+                if (c.s == n-2)
+                {
+                    ans.pb(c.f);
+                    m[c.f] = 0;
+                    break;
+                }
+            }
+        }
+    }
+    REP(i, 0, n)
+    cout << ans[i] << " ";
+    cout << endl;
 }
 signed main()
 {

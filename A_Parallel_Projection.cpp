@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2023-01-18 23:43:29
+// 2023-01-18 18:58:35
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -58,33 +58,16 @@ int inversemod(int n, int mod)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    vi dp(m + 1, 0);
-    REP(i, 0, n)
-    {
-        int x;
-        cin >> x;
-        dp[x]++;
-    }
-    vi a(m);
-    REP(i, 0, m)
-    cin >> a[i];
-    REP(i, 2, m + 1)
-    dp[i] += dp[i - 1];
-    int ans = 0;
-    REP(i, 1, m + 1)
-    {
-        int candies=0;
-        REP(j,1,(m/i)+1)
-        {
-            int l = j*i;
-            int r =min(m,(j+1)*i-1);
-            candies+=(dp[r]-dp[l-1])*j;
-        }
-        ans=max(ans,candies*a[i-1]);
-    }
-    cout<<ans<<endl;
+    int w, d, h;
+    cin >> w >> d >> h;
+    int a, b, f, g;
+    cin >> a >> b >> f >> g;
+    int ans1 = h + b + g + abs(a - f);
+    int ans2 = h + d - b + d - g + abs(a - f);
+    int ans3 = h + a + f + abs(b - g);
+    int ans4 = h + w-a + w-f + abs(b - g);
+    int ans = min({ans1, ans2, ans3, ans4});
+    cout << ans << endl;
 }
 signed main()
 {

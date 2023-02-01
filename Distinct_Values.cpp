@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2023-01-18 23:43:29
+// 2023-01-18 20:40:34
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -58,33 +58,43 @@ int inversemod(int n, int mod)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    vi dp(m + 1, 0);
+    int n;
+    cin >> n;
+    vi a(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    set<int> s;
+    stack<int> s1;
     REP(i, 0, n)
     {
-        int x;
-        cin >> x;
-        dp[x]++;
-    }
-    vi a(m);
-    REP(i, 0, m)
-    cin >> a[i];
-    REP(i, 2, m + 1)
-    dp[i] += dp[i - 1];
-    int ans = 0;
-    REP(i, 1, m + 1)
-    {
-        int candies=0;
-        REP(j,1,(m/i)+1)
+        while (!s1.empty() && s1.top() <= a[i])
         {
-            int l = j*i;
-            int r =min(m,(j+1)*i-1);
-            candies+=(dp[r]-dp[l-1])*j;
+            int temp = s1.top();
+            s.insert(a[i] - temp);
+            s1.pop();
         }
-        ans=max(ans,candies*a[i-1]);
+
+        s1.push(a[i]);
     }
-    cout<<ans<<endl;
+    while (!s1.empty())
+    {
+        /* code */
+    s1.pop();
+    }
+    
+    REPREV(i, 0, n)
+    {
+        while (!s1.empty() && s1.top() <= a[i])
+        {
+            int temp = s1.top();
+            s.insert(a[i] - temp);
+            s1.pop();
+        }
+
+        s1.push(a[i]);
+    }
+
+    cout << s.size() << endl;
 }
 signed main()
 {

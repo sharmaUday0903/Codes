@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2022-11-21 22:27:10
+// 2023-02-01 16:05:18
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -14,62 +14,102 @@ using namespace std;
 #define REPREV(i, k, n) for (int i = n - 1; i >= k; i--)
 #define pii pair<int, int>
 #define vpi vector<pair<int, int>>
+#define vvi vector<vi>
 #define vi vector<int>
 #define sortv(v) sort(v.begin(), v.end())
 #define sortrev(v) sort(v.begin(), v.end(), greater<int>())
-#define inf 1000000000000000005
 #define int long long int
+const int MOD = 1e9 + 7;
+int power(int x, int y)
+{
+    int res = 1;
+    while (y)
+    {
+        if (y % 2)
+        {
+            res = res * x;
+        }
+        y = y >> 1;
+        x = x * x;
+    }
+    return res;
+}
+int power(int x, int y, int mod)
+{
+    int res = 1;
+    x = x % mod;
+    if (x == 0)
+        return 0;
+    while (y)
+    {
+        if (y % 2)
+        {
+            res = (res * x) % mod;
+        }
+        y = y >> 1;
+        x = (x * x) % mod;
+    }
+    return res;
+}
+int inversemod(int n, int mod)
+{
+    return power(n, mod - 2) % MOD;
+}
 
 void solve()
 {
     int n, c, d;
     cin >> n >> c >> d;
-    int sum = 0;
-    int a[n];
+    vi a(n);
     REP(i, 0, n)
+    cin >> a[i];
+    sortrev(a);
+    int sum = 0;
+    REP(i, 0, min(n, d))
     {
-        cin >> a[i];
         sum += a[i];
     }
-    int mx = *max_element(a, a + n);
-    sort(a, a + n, greater<int>());
-    int cnt = 0;
-    REP(i, 0, min(d, n))
-    {
-        cnt += a[i];
-    }
-    if (mx * d < c)
-    {
-        cout << "Impossible\n";
-        return;
-    }
-    if (cnt >= c)
+    if (sum >= c)
     {
         cout << "Infinity\n";
         return;
     }
-    int ans = 0;
-    int l = 0, r = 1e16 + 5;
-    int y = c % sum;
-    int exidx = -1;
-    int cntt = 0;
-    REP(i, 0, n)
+    int s=a[0]*d;
+    if(s<c)
     {
-        cntt += a[i];
-        if (cntt >= y)
+        cout << "Impossible\n";
+        return;
+    }
+    int l = 1, r = d;
+    int ans=0;
+    while (l<=r)
+    {
+        int mid=(l+r)/2;
+        int p = mid+1;
+        vi v(d,0);
+        int tsum=0;
+        REP(i,0,d)
         {
-            exidx = i+1;
-            break;
+            if(i%p<=n-1)
+            {
+                v[i]=a[i%p];
+                tsum+=v[i];
+            }
         }
+        // cout<<mid<<endl;
+        // for(auto c:v)cout<<c<<" ";
+        // cout<<endl;
+        if(tsum>=c)
+        {
+            l=mid+1;
+            ans=mid;
+        }
+        else r=mid-1;
     }
-    d-=exidx;
-    c-=y;
-    while (l <= r)
-    {
-        int mid = (l + r) / 2;
-        
+    cout<<ans<<endl;
 
-    }
+
+    
 }
 signed main()
 {

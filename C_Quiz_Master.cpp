@@ -1,5 +1,5 @@
 // author : Uday Sharma
-// 2023-01-18 23:43:29
+// 2023-01-23 18:21:25
 #include <bits/stdc++.h>
 #define fast                          \
     ios_base::sync_with_stdio(false); \
@@ -60,31 +60,57 @@ void solve()
 {
     int n, m;
     cin >> n >> m;
-    vi dp(m + 1, 0);
+    int k = 0;
+    vi a(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    sortv(a);
+    int ans = INT64_MAX;
+    int j = 0;
+    vi cnt(m + 1, 0);
     REP(i, 0, n)
     {
-        int x;
-        cin >> x;
-        dp[x]++;
-    }
-    vi a(m);
-    REP(i, 0, m)
-    cin >> a[i];
-    REP(i, 2, m + 1)
-    dp[i] += dp[i - 1];
-    int ans = 0;
-    REP(i, 1, m + 1)
-    {
-        int candies=0;
-        REP(j,1,(m/i)+1)
+        while (j < n && k != m)
         {
-            int l = j*i;
-            int r =min(m,(j+1)*i-1);
-            candies+=(dp[r]-dp[l-1])*j;
+            for (int f = 1; f <= sqrt(a[j]); f++)
+            {
+                if (a[j] % f == 0 && f <= m)
+                {
+                    if (cnt[f] == 0)
+                        k++;
+                    cnt[f]++;
+                    if (a[j] / f <= m)
+                    {
+                        if (cnt[a[j] / f] == 0)
+                            k++;
+                        cnt[a[j] / f]++;
+                    }
+                }
+            }
+
+            j++;
         }
-        ans=max(ans,candies*a[i-1]);
+        if (k == m)
+            ans = min(a[j - 1] - a[i], ans);
+
+        for (int f = 1; f <= sqrt(a[i]); f++)
+        {
+            if (a[i] % f == 0 && f <= m)
+            {
+                if (cnt[f] == 1)
+                    k--;
+                cnt[f]--;
+                if (a[i] / f <= m)
+                {
+                    if (cnt[a[i] / f] == 1)
+                        k--;
+                    cnt[a[i] / f]--;
+                }
+            }
+        }
     }
-    cout<<ans<<endl;
+    if(ans==INT64_MAX)cout<<-1<<endl;
+    else cout<<ans<<endl;
 }
 signed main()
 {
