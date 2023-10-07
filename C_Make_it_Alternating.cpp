@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-09-30 16:49:08
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -109,27 +109,45 @@ void solve()
 {
     string s;
     cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n = s.size();
+    int k = 1;
+    REP(i, 1, n)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
+        if (s[i] == s[i - 1])
         {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
         }
-        in=q;
+        else
+        {
+            k++;
+        }
     }
-    cout<<"NO\n";
+    cout << n - k << " ";
+    int ans2 = 1;
+    const int mod = 998244353;
+    int len = 1;
+    REP(i, 1, n)
+    {
+        if (s[i] == s[i - 1])
+        {
+            len++;
+        }
+        else
+        {
+
+            ans2 *= len;
+            ans2 %= mod;
+            len = 1;
+        }
+    }
+    ans2 *= len;
+    ans2 %= mod;
+    len = 1;
+    REP(i, 1, n - k + 1)
+    {
+        ans2 *= i;
+        ans2 %= mod;
+    }
+    cout << ans2 << endl;
 }
 
 signed main()

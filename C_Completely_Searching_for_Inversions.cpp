@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-10-07 01:16:01
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 1e9 + 7;
+const int MOD = 998244353;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -105,38 +105,50 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+void dfs(int x, vvi &dp, vi &vis, vector<vector<pii>> &adj)
+{
+    vis[x] = 1;
+    for (auto c : adj[x])
+    {
+        if (!vis[c.f])
+        {
+            dp[c.s][c.f]++;
+            if (c.s == 1)
+            {
+                dp[2][c.f] += dp[0][c.f];
+            }
+            dfs(c.f, dp, vis, adj);
+            dp[2][x] += (dp[2][c.f] + dp[1][x] * dp[0][c.f]) % MOD;
+            dp[0][x] += (dp[0][c.f]) % MOD;
+            dp[1][x] += (dp[1][c.f]) % MOD;
+        }
+    }
+}
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    vector<vector<pii>> adj(n);
+    int k;
+    cin >> k;
+    REP(i, 0, k)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        int x, y;
+        cin >> x >> y;
+        x--;
+        adj[i].pb({x, y});
     }
-    cout<<"NO\n";
+    vvi dp(3, vi(n,0));
+    vi vis(n, 0);
+    dfs(0, dp, vis, adj);
+    cout << dp[2][0] << endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
         solve();
 }

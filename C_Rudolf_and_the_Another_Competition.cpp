@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-07-07 20:20:10
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,29 +107,61 @@ void inifact()
 }
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n, m, k;
+    cin >> n >> m >> k;
+    vvi a(n, vi(m));
+    REP(i, 0, n)
+    REP(j, 0, m)
+    cin >> a[i][j];
+
+    map<int, pair<int, int>> mp;
+    REP(i, 0, n)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        sortv(a[i]);
     }
-    cout<<"NO\n";
+    vvi temp = a;
+
+    REP(i, 0, n)
+    {
+        REP(j, 1, m)
+        {
+            a[i][j] += a[i][j - 1];
+        }
+        int sum = 0;
+        int tsum = 0;
+        int cnt = 0;
+        REP(j, 0, m)
+        {
+            tsum += temp[i][j];
+            sum += a[i][j];
+            if (tsum <= k)
+                cnt++;
+            else
+            {
+                sum -= a[i][j];
+                break;
+            }
+        }
+        mp[i + 1] = {cnt, sum};
+    }
+    vector<pair< pair<int, int>,int>> v;
+    for (auto c : mp)
+    {
+        v.pb({{3 - c.s.f, c.s.s}, c.f});
+    }
+    sortv(v);
+    int ans = 0;
+    REP(i, 0, n)
+    {
+        pair<pair<int, int>, int> c = v[i];
+        // cout << c.f << " " << c.s.f << " " << c.s.s << endl;
+        if (c.s == 1)
+        {
+            ans = i + 1;
+            break;
+        }
+    }
+    cout << ans << endl;
 }
 
 signed main()

@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-07-30 16:56:33
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,29 +107,51 @@ void inifact()
 }
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
+    int n, m;
+    cin >> n >> m;
+    vector<vector<pair<int, int>>> adj(n);
     REP(i, 0, m)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        int x, y, d;
+        cin >> x >> y >> d;
+        x--;
+        y--;
+        adj[x].pb({y, d});
+        adj[y].pb({x, -d});
     }
-    cout<<"NO\n";
+    vi vis(n, 0);
+    vi val(n);
+    REP(i, 0, n)
+    {
+        if (!vis[i])
+        {
+            vis[i] = 1;
+            queue<int> q;
+            q.push(i);
+            while (!q.empty())
+            {
+                int x = q.front();
+                q.pop();
+                for (auto c : adj[x])
+                {
+                    if (!vis[c.f])
+                    {
+                        vis[c.f] = 1;
+                        q.push(c.f);
+                        val[c.f] = val[x] + c.s;
+                    }
+                    else if (val[c.f] != val[x] + c.s)
+                    {
+                      
+                        
+                        cout << "NO\n";
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    cout << "YES\n";
 }
 
 signed main()

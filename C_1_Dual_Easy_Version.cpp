@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-07-29 20:12:29
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,29 +107,80 @@ void inifact()
 }
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    vi a(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    int mn = *min_element(a.begin(), a.end());
+    int mx = *max_element(a.begin(), a.end());
+    if (mn == mx)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        cout << 0 << endl;
+        return;
     }
-    cout<<"NO\n";
+    vpi v;
+    int ans = 0;
+    if (mx > 0)
+    {
+        int in;
+        REP(i, 0, n)
+        {
+            {
+                if (a[i] == mx)
+                {
+                    in = i;
+                    break;
+                }
+            }
+        }
+        while (a[in] <= 500)
+        {
+            a[in] += a[in];
+            v.pb({in + 1, in + 1});
+            ans++;
+        }
+        v.pb({1, in + 1});
+        ans++;
+        REP(i, 1, n)
+        {
+            ans += 2;
+            v.pb({i + 1, i});
+            v.pb({i + 1, i});
+        }
+    }
+    else
+    {
+        int in;
+        REP(i, 0, n)
+        {
+            {
+                if (a[i] == mn)
+                {
+                    in = i;
+                    break;
+                }
+            }
+        }
+        int y=-500;
+        while (a[in] >= (y))
+        {
+            a[in] += a[in];
+            v.pb({in + 1, in + 1});
+            ans++;
+        }
+        v.pb({n, in + 1});
+        ans++;
+        REPREV(i, 1, n)
+        {
+            ans += 2;
+            v.pb({i, i + 1});
+            v.pb({i, i + 1});
+        }
+    }
+    cout << ans << endl;
+    for (auto c : v)
+        cout << c.f << " " << c.s << endl;
 }
 
 signed main()

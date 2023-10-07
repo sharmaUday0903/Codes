@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-07-07 20:09:23
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,31 +105,59 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+bool solve(char c, vector<vector<char>> v)
+{
+    REP(i, 0, 3)
+    {
+        int cnt = 0;
+        REP(j, 0, 3)
+        {
+            if (v[i][j] == c)
+                cnt++;
+        }
+        if (cnt == 3)
+            return true;
+    }
+    REP(j, 0, 3)
+    {
+        int cnt = 0;
+        REP(i, 0, 3)
+        {
+            if (v[i][j] == c)
+                cnt++;
+        }
+        if (cnt == 3)
+            return true;
+    }
+    int cnt1=(v[0][0]==c)+(v[2][2]==c)+(v[1][1]==c);
+    int cnt2=(v[2][0]==c)+(v[1][1]==c)+(v[0][2]==c);
+    if(cnt1==3||cnt2==3)return true;
+    return false;
+}
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    vector<vector<char>> v(3, vector<char>(3));
+    REP(i, 0, 3)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        REP(j, 0, 3)
+        cin >> v[i][j];
     }
-    cout<<"NO\n";
+    if (solve('X', v))
+    {
+        cout << 'X'<<endl;
+        return;
+    }
+    if (solve('O', v))
+    {
+        cout << 'O'<<endl;
+        return;
+    }
+    if (solve('+', v))
+    {
+        cout << '+'<<endl;
+        return;
+    }
+    cout << "DRAW\n";
 }
 
 signed main()

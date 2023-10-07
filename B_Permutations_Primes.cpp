@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-07-11 20:12:25
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,31 +105,34 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    if (n <= 2)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        REP(i, 1, n + 1)
+        cout << i << " ";
+        cout << endl;
+        return;
     }
-    cout<<"NO\n";
+    vi ans(n, 0);
+    ans[0] = 3;
+    ans[n - 1] = 2;
+    ans[n / 2] = 1;
+    int cnt=4;
+    REP(i, 0, n)
+    {
+        if (ans[i] == 0)
+        {
+            ans[i] = cnt;
+            cnt++;
+        }
+    }
+    for (auto c : ans)
+        cout << c << " ";
+    cout << endl;
 }
 
 signed main()
@@ -137,6 +140,7 @@ signed main()
     fast;
     int t = 1;
     cin >> t;
+    sieve();
     while (t--)
         solve();
 }

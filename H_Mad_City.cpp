@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-10-01 14:24:05
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,31 +105,84 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+int entry_node = -1;
+vector<int> path;
+ 
+bool dfs(int u, int p,vvi &adj,vi &vis)
+{
+    vis[u] = true;
+    for(auto v : adj[u])
+    {
+        if(v != p && vis[v])
+        {
+            entry_node = v;
+            return true;
+        }
+        else if(v != p && !vis[v])
+        {
+            if(dfs(v, u,adj,vis))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    int a, b;
+    cin >> a >> b;
+    a--, b--;
+    vvi adj(n);
+    REP(i, 0, n)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        int c, d;
+        cin >> c >> d;
+        c--, d--;
+        adj[c].pb(d);
+        adj[d].pb(c);
     }
-    cout<<"NO\n";
+    if (a == b)
+    {
+        cout << "NO\n";
+        return;
+    }
+    vi vis(n, 0);
+    entry_node = -1;
+    dfs(b,-1, adj, vis);
+    // cout << entry_node << endl;
+    auto bfs = [&](int s)
+    {
+        vector<int> dis(n, -1);
+        dis[s] = 0;
+        queue<int> q;
+        q.push(s);
+
+        while (!q.empty())
+        {
+            int x = q.front();
+            q.pop();
+
+            for (auto y : adj[x])
+            {
+                if (dis[y] == -1)
+                {
+                    dis[y] = dis[x] + 1;
+                    q.push(y);
+                }
+            }
+        }
+        return dis;
+    };
+    auto dis1 = bfs(b);
+    auto dis2 = bfs(a);
+   
+    if (dis1[entry_node] < dis2[entry_node])
+        cout << "YES\n";
+    else
+        cout << "NO\n";
 }
 
 signed main()

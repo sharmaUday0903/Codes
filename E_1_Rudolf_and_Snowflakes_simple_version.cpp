@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-07-07 21:19:57
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,29 +107,25 @@ void inifact()
 }
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    REP(i, 2, 20002)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
+        int ans = 1 + power(i, 1) + power(i, 2);
+        int cnt = 3;
+        while (ans < n)
         {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
+            ans += power(i, cnt);
+            cnt++;
         }
-        in=q;
+        // cout<<ans<<" ";
+        if (ans == n)
+        {
+            cout << "YES\n";
+            return;
+        }
     }
-    cout<<"NO\n";
+    cout << "NO\n";
 }
 
 signed main()

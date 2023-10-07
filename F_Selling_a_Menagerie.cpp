@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-10-01 15:50:13
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,29 +107,92 @@ void inifact()
 }
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    vi a(n), b(n);
+    REP(i, 0, n)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
-        {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
-        }
-        in=q;
+        cin >> a[i];
+        a[i]--;
     }
-    cout<<"NO\n";
+    REP(i, 0, n)
+    cin >> b[i];
+    vi ans;
+    vvi adj(n);
+    vi ind(n, 0);
+    REP(i, 0, n)
+    {
+        adj[i].pb(a[i]);
+        ind[a[i]]++;
+    }
+    queue<int> q;
+    vi vis(n, 0);
+    REP(i, 0, n)
+    {
+        if (!ind[i])
+        {
+            q.push(i);
+            vis[i] = 1;
+            ans.pb(i);
+        }
+    }
+    while (!q.empty())
+    {
+        int p = q.front();
+        q.pop();
+        for (auto c : adj[p])
+        {
+            if (!vis[c])
+            {
+                ind[c]--;
+                if (ind[c] == 0)
+                {
+                    q.push(c);
+                    vis[c] = 1;
+                    ans.pb(c);
+                }
+            }
+        }
+    }
+    REP(i, 0, n)
+    {
+        if (!vis[i])
+        {
+            int cnt = INT_MAX;
+            int in;
+            if (cnt > b[i])
+            {
+                in = i;
+                cnt = b[i];
+            }
+            vis[i] = 1;
+            int p = a[i];
+            while (p != i)
+            {
+                if (cnt > b[p])
+                {
+                    in = p;
+                    cnt = b[p];
+                }
+                vis[p] = 1;
+                p = a[p];
+            }
+            int q=a[in];
+            while(q!=in)
+            {
+                ans.pb(q);
+                q=a[q];
+            }
+            ans.pb(q);
+
+        }
+    }
+
+    for (auto &c : ans)
+        c++;
+    for (auto c : ans)
+        cout << c << " ";
+    cout << endl;
 }
 
 signed main()

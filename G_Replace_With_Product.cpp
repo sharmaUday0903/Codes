@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-10-01 16:40:15
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -22,7 +22,7 @@ using namespace std;
 
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
-const int INF = 1e15;
+const int INF = 1e7;
 const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
@@ -107,29 +107,81 @@ void inifact()
 }
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    vi a(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    int mul = 1;
+    bool u = false;
+    for (auto c : a)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
+        mul *= c;
+        if (mul >= INF)
         {
-            if (s.find(c, in) == -1)
-            {
-                cout << "YES\n";
-                return;
-            }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
+            u = true;
+            break;
         }
-        in=q;
     }
-    cout<<"NO\n";
+    if (u)
+    {
+        int l = 1;
+        while (a[l - 1] == 1)
+        {
+            l++;
+        }
+        int r = n;
+        while (a[r - 1] == 1)
+        {
+            r--;
+        }
+        cout << l << " " << r << endl;
+    }
+    else
+    {
+        vi prefs(n + 1, 0);
+        vi prefm(n + 1, 1);
+        REP(i, 1, n + 1)
+        {
+            prefs[i] = prefs[i - 1] + a[i - 1];
+        }
+        REP(i, 1, n + 1)
+        {
+            prefm[i] = prefm[i - 1] * a[i - 1];
+        }
+        vector<int> temp;
+        for (int i = 0; i < n; i++)
+        {
+            if (a[i] != 1)
+            {
+                temp.pb(i + 1);
+            }
+        }
+        if(temp.empty())
+        {
+            cout<<1<<" "<<1<<endl;
+            return;
+        }
+        int y = temp.size();
+        int l,r;
+        int d=INT_MIN;
+        REP(i, 0, y)
+        {
+            REP(j, i , y)
+            {
+                int sum=prefs[temp[j]]-prefs[temp[i]-1];
+                int mul=prefm[temp[j]]/prefm[temp[i]-1];
+                int dif=mul-sum;
+                if(dif>d)
+                {
+                    d=dif;
+                    l=temp[i];
+                    r=temp[j];
+                }
+            }
+        }
+        cout<<l<<" "<<r<<endl;
+    }
 }
 
 signed main()

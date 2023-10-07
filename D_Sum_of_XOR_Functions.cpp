@@ -1,4 +1,4 @@
-// 2023-07-13 14:44:54
+// 2023-09-30 19:22:14
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,38 +105,60 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+const int mod = 998244353;
 void solve()
 {
-    string s;
-    cin >> s;
-    int m;
-    cin >> m;
-    string l, r;
-    cin >> l >> r;
-    int in = 0;
-    REP(i, 0, m)
+    int n;
+    cin >> n;
+    vi a(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    int ans = 0;
+    REP(b, 0, 31)
     {
-        int q = in;
-        for (char c = l[i]; c <= r[i]; c++)
+        int ans1=0;
+        vector<int> temp;
+        for (auto c : a)
         {
-            if (s.find(c, in) == -1)
+            if ((1 << b) & c)
             {
-                cout << "YES\n";
-                return;
+                temp.pb(1);
             }
-            int d=(s.find(c, in)) + 1;
-            q = max(q, d);
+            else
+            {
+                temp.pb(0);
+            }
         }
-        in=q;
+        vi cnt(2, 0), sum(2, 0);
+        cnt[0] = 1;
+        int f = 0;
+        REP(i, 0, n)
+        {
+            f ^= temp[i];
+            int p = f ^ 1;
+            int y = cnt[p];
+            if (y)
+            {
+                int x = (i+1) * y - sum[p];
+                ans1+=x;
+                ans1%=mod;
+            }
+            sum[f] += (i+1);
+            cnt[f]++;
+        }
+        int p = (1<<b)*ans1;
+        p%=mod;
+        ans+=p;
+        ans%=mod;
     }
-    cout<<"NO\n";
+    cout<<ans<<endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
         solve();
 }
