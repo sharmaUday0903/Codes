@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-08 13:14:21
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,43 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+void dfs(int u, vi &dp, vvi &adj, vi &vis, vi &par)
+{
+    vis[u] = 1;
+    for (auto c : adj[u])
+    {
+        if (!vis[c])
+        {
+            dfs(c, dp, adj, vis, par);
+        }
+
+        dp[u] = (dp[u] + dp[c]) % MOD;
+    }
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    vvi adj(n);
+    REP(i, 0, m)
+    {
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        adj[x].pb(y);
+    }
+    vi dp(n, 0);
+    dp[n - 1] = 1;
+    vi vis(n, 0);
+    vi par(n, -1);
+    REP(i, 0, n)
+    {
+        if (!vis[i])
+        {
+            dfs(i, dp, adj, vis, par);
+        }
+    }
+    cout << dp[0];
 }
 
 signed main()
@@ -120,7 +149,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

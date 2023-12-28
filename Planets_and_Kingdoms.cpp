@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-09 01:55:05
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,71 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+
+vector<vector<int>> adj(maxl), adj_rev(maxl);
+vector<bool> used(maxl);
+vector<int> order, component;
+
+void dfs1(int v)
+{
+    used[v] = true;
+
+    for (auto u : adj[v])
+        if (!used[u])
+            dfs1(u);
+
+    order.push_back(v);
+}
+
+void dfs2(int v)
+{
+    used[v] = true;
+    component.push_back(v);
+
+    for (auto u : adj_rev[v])
+        if (!used[u])
+            dfs2(u);
+}
+
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    REP(i,0,m)
+    {
+        int x,y;
+        cin>>x>>y;
+        x--,y--;
+        adj[x].pb(y);
+        adj_rev[y].pb(x);
+    }
+    used.assign(n,0);
+    REP(i,0,n)
+    {
+        if(!used[i])dfs1(i);
+    }
+    used.assign(n,0);
+    reverse(order.begin(),order.end());
+    int in=1;
+    vi ans(n);
+    for(auto c:order)
+    {
+        if(!used[c])
+        {
+            dfs2(c);
+            for(auto c:component)
+            {
+                ans[c]=in;
+            }
+
+            component.clear();
+            in++;
+        }
+    }
+    in--;
+    cout<<in<<endl;
+    for(auto c:ans)cout<<c<<" ";
+
 }
 
 signed main()
@@ -120,7 +177,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

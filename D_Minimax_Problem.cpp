@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-10-26 22:41:46
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,12 +107,62 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    vvi a(n, vi(m));
+    int l = 0, r = 0;
+    REP(i, 0, n)
+    {
+        REP(j, 0, m)
+        {
+            cin >> a[i][j];
+            r = max(r, a[i][j]);
+        }
+    }
+    int ans1, ans2;
+    while (l <= r)
+    {
+        int mid = (l + r) / 2;
+        vi cnt(1 << m, -1);
+        REP(i, 0, n)
+        {
+            int w = 0;
+            REP(j, 0, m)
+            {
+                if (a[i][j] >= mid)
+                {
+                    w ^= (1 << j);
+                }
+            }
+            cnt[w] = i+1 ;
+        }
+        bool u = false;
+        REP(i, 0, (1 << m))
+        {
+            REP(j, 0, (1 << m))
+            {
+                if (cnt[i] != -1 && cnt[j] != -1 && ((i | j) == ((1 << m) - 1)))
+                {
+                    ans1 = cnt[i];
+                    ans2 = cnt[j];
+                    u = true;
+                    break;
+                }
+            }
+            if (u)
+                break;
+        }
+        if (u)
+        {
+
+            l = mid + 1;
+        }
+        else
+        {
+            r = mid - 1;
+        }
+    }
+    cout << ans1 << " " << ans2<<endl;
 }
 
 signed main()
@@ -120,7 +170,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

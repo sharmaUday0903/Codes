@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-10-28 00:04:20
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,14 +105,74 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vi tree;
+
+void update(int k, int u, int n)
+{
+    tree[k + n] = u;
+    int j = (k + n) / 2;
+    while (j >= 1)
+    {
+        tree[j] = tree[j * 2] + tree[2 * j + 1];
+        j /= 2;
+    }
+}
+int f(int node, int s, int e, int l, int r)
+{
+    if (l <= s && r >= e)
+    {
+        return tree[node];
+    }
+    if (l > e || r < s)
+    {
+        return 0;
+    }
+    int last = (s + e) / 2;
+    return f(node * 2, s, last, l, r) + f(2 * node + 1, last + 1, e, l, r);
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
+    int n, q;
+    cin >> n >> q;
     vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    REP(i, 0, n)
+    {
+        cin >> a[i];
+    }
+    while ((n & (n - 1)) != 0)
+    {
+        a.pb(0);
+        n++;
+    }
+    tree.resize(2 * n);
+    REP(i, 0, n)
+    {
+        tree[i + n] = a[i];
+    }
+    REPREV(i, 1, n)
+    {
+        tree[i] = tree[2 * i] + tree[2 * i + 1];
+    }
+
+    REP(i, 0, q)
+    {
+        int type;
+        cin >> type;
+        if (type == 1)
+        {
+            int k, u;
+            cin >> k >> u;
+            k--;
+            update(k, u, n);
+        }
+        else
+        {
+            int l, r;
+            cin >> l >> r;
+            l--, r--;
+            cout << f(1, 0, n - 1, l, r) << endl;
+        }
+    }
 }
 
 signed main()
@@ -120,7 +180,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-10-29 18:27:53
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,14 +105,25 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vpi v;
+void helper(int n, int f, int s, int t)
+{
+    if (n == 0)
+    {
+        return;
+    }
+    helper(n - 1, f, t,s );
+    v.pb({f,t});
+    helper(n - 1, s, f, t);
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    helper(n, 1, 2, 3);
+    cout << v.size() << endl;
+    for (auto c : v)
+        cout << c.f << " " << c.s << endl;
 }
 
 signed main()
@@ -120,7 +131,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

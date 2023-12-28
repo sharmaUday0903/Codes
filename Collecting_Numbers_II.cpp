@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-03 00:54:13
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,12 +107,61 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
+    int n, m;
+    cin >> n >> m;
     vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    vi v(n);
+    REP(i, 0, n)
+    {
+        int x;
+        cin >> x;
+        x--;
+        v[i] = x;
+        a[x] = i;
+    }
+    int ans = 1;
+    REP(i, 1, n)
+    {
+        if (a[i] < a[i - 1])
+            ans++;
+    }
+
+    cout << endl;
+    REP(i, 0, m)
+    {
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        int p = v[x];
+        int q = v[y];
+        set<pair<int, int>> s;
+        if (p != n - 1)
+            s.insert({p, p + 1});
+        if (q != n - 1)
+            s.insert({q, q + 1});
+        if (p != 0)
+            s.insert({p - 1, p});
+        if (q != 0)
+            s.insert({q - 1, q});
+        for (auto c : s)
+        {
+            if (a[c.f] > a[c.s])
+            {
+                ans--;
+            }
+        }
+        swap(v[x], v[y]);
+        a[v[y]] = y;
+        a[v[x]] = x;
+        for (auto c : s)
+        {
+            if (a[c.f] > a[c.s])
+            {
+                ans++;
+            }
+        }
+        cout<<ans<<endl;
+    }
 }
 
 signed main()
@@ -120,7 +169,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

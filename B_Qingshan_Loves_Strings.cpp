@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-10-28 20:10:25
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,20 +107,71 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    string s, t;
+    cin >> s >> t;
+    string temp = s;
+    bool u = true;
+    REP(i, 0, temp.size() - 1)
+    {
+        if (temp[i] == temp[i + 1])
+        {
+            u = false;
+        }
+    }
+    if (u)
+    {
+        cout << "Yes\n";
+        return;
+    }
+    bool ut = true;
+    temp = t;
+    REP(i, 0, temp.size() - 1)
+    {
+        if (temp[i] == temp[i + 1])
+        {
+            ut = false;
+        }
+    }
+    if (!ut || t[0] != t[t.size() - 1])
+    {
+        cout << "No\n";
+        return;
+    }
+    int p = t[0] - '0';
+    int cnt0 = 0, cnt1 = 0;
+    REP(i, 0, n)
+    {
+        if (s[i] == s[i + 1])
+        {
+            if (s[i] == '0')
+                cnt0++;
+            else
+            {
+                cnt1++;
+            }
+        }
+    }
+    if (p == 0 && cnt0)
+    {
+        cout << "No\n";
+        return;
+    }
+    if (p == 1 && cnt1)
+    {
+        cout << "No\n";
+        return;
+    }
+
+    cout << "Yes\n";
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

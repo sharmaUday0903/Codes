@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-03 00:20:38
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,12 +107,90 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
+    int n, k;
+    cin >> n >> k;
     vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    REP(i, 0, n)
+    cin >> a[i];
+    if (k == 1)
+    {
+        for (auto c : a)
+            cout << 0 << " ";
+        return;
+    }
+
+    if (k == 2)
+    {
+        REP(i, 1, n)
+        {
+            cout << abs(a[i - 1] - a[i]) << " ";
+        }
+        return;
+    }
+    int sum1 = 0, sum2 = 0;
+    set<pair<int, int>> l, r;
+    vpi temp;
+    REP(i, 0, k)
+    {
+        temp.pb({a[i], i});
+    }
+    sortv(temp);
+    REP(i, 0, (k + 1) / 2)
+    {
+        l.insert(temp[i]);
+        sum1 += temp[i].f;
+    }
+    REP(i, (k + 1) / 2, k)
+    {
+        r.insert(temp[i]);
+        sum2 += temp[i].f;
+    }
+    int med = l.rbegin()->first;
+    int p = l.size() * med - sum1 + sum2 - r.size() * med;
+    cout << p << " ";
+    REP(i, k, n)
+    {
+        if (l.find({a[i - k], i - k}) != l.end())
+        {
+            l.erase({a[i - k], i - k});
+            sum1 -= a[i - k];
+        }
+        else
+        {
+            r.erase({a[i - k], i - k});
+            sum2 -= a[i - k];
+        }
+        if (l.rbegin()->first < a[i])
+        {
+            r.insert({{a[i], i}});
+            sum2 += a[i];
+        }
+        else
+        {
+            l.insert({a[i], i});
+            sum1 += a[i];
+        }
+        while (l.size() < (k + 1) / 2)
+        {
+            pii x = *r.begin();
+
+            r.erase(x);
+            sum2 -= x.first;
+            l.insert(x);
+            sum1 += x.first;
+        }
+        while (r.size() < (k) / 2)
+        {
+            pii x = *l.rbegin();
+            l.erase(x);
+            sum1 -= x.f;
+            r.insert(x);
+            sum2 += x.f;
+        }
+        int med = l.rbegin()->first;
+        int p = l.size() * med - sum1 + sum2 - r.size() * med;
+        cout << p << " ";
+    }
 }
 
 signed main()
@@ -120,7 +198,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

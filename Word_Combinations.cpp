@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-14 22:47:52
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,71 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+
+const int K = 26;
+
+struct Vertex
+{
+    int next[K];
+    bool output = false;
+
+    Vertex()
+    {
+        fill(begin(next), end(next), -1);
+    }
+};
+
+vector<Vertex> trie(1);
+
+void add_string(string const &s)
+{
+    int v = 0;
+    for (char ch : s)
+    {
+        int c = ch - 'a';
+        if (trie[v].next[c] == -1)
+        {
+            trie[v].next[c] = trie.size();
+            trie.emplace_back();
+        }
+        v = trie[v].next[c];
+    }
+    trie[v].output = true;
+}
+
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    string t;
+    cin >> t;
+    int n = t.size();
+    int k;
+    cin >> k;
+    REP(i, 0, k)
+    {
+        string x;
+        cin >> x;
+        add_string(x);
+    }
+    vi dp(n + 1, 0);
+    dp[n] = 1;
+    REPREV(i, 0, n)
+    {
+        int curr = 0;
+        int ans = 0;
+        REP(j, i, n)
+        {
+            if (trie[curr].next[t[j] - 'a'] == -1)
+                break;
+
+            curr = trie[curr].next[t[j] - 'a'];
+            if(trie[curr].output)
+            {
+                ans=(ans+dp[j+1]%MOD)%MOD;
+            }
+        }
+        dp[i]=ans;
+    }
+    cout << dp[0];
 }
 
 signed main()
@@ -120,7 +177,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

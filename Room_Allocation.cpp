@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-02 17:35:05
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,12 +107,48 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    vi ans(n);
+    vector<pair<pair<int, int>, int>> v(n);
+    REP(i, 0, n)
+    {
+        cin >> v[i].f.f >> v[i].f.s;
+        v[i].s = i;
+    }
+    sortv(v);
+    int r = 0, last = 0;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    REP(i, 0, n)
+    {
+        if (pq.empty())
+        {
+            last++;
+            pq.push({v[i].f.s, last});
+            ans[v[i].s] = last;
+        }
+        else
+        {
+            pair<int, int> mn = pq.top();
+            if (mn.f < v[i].f.f)
+            {
+                pq.pop();
+                pq.push({v[i].f.s, mn.s});
+                ans[v[i].s] = mn.s;
+            }
+            else
+            {
+                last++;
+                pq.push({v[i].f.s, last});
+                ans[v[i].s] = last;
+            }
+        }
+        r=max(r,(int)pq.size());
+    }
+        
+    cout<<r<<endl;
+    for(auto c:ans)cout<<c<<" ";
+
 }
 
 signed main()
@@ -120,7 +156,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

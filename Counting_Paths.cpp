@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-13 18:29:56
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,93 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vi ans(maxl, 0);
+vvi adj(maxl);
+int logN = 20;
+vvi par(maxl, vi(logN));
+vi d(maxl);
+void dfs(int u = 0, int p = 0)
+{
+    par[u][0] = p;
+    REP(i, 1, logN)
+    {
+        par[u][i] = par[par[u][i - 1]][i - 1];
+    }
+    for (auto c : adj[u])
+    {
+        if (c != p)
+        {
+            d[c] = d[u] + 1;
+            dfs(c, u);
+        }
+    }
+}
+vi val(maxl, 0);
+void dfs2(int u = 0, int p = 0)
+{
+    for (auto c : adj[u])
+    {
+        if (p == c)
+            continue;
+        dfs2(c, u);
+        val[u] += val[c];
+    }
+    // if(u==4)cout<<val[u]<<endl;
+    ans[u] = val[u];
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    REP(i, 0, n - 1)
+    {
+        int u, v;
+        cin >> u >> v;
+        u--, v--;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+    dfs();
+    REP(k, 0, m)
+    {
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        val[a]++;
+        val[b]++;
+        if (d[a] > d[b])
+            swap(a, b);
+        int dif = d[b] - d[a];
+        REPREV(i, 0, logN)
+        {
+            if ((1 << i) & dif)
+            {
+                b = par[b][i];
+            }
+        }
+        REPREV(i, 0, logN)
+        {
+            if (par[a][i] != par[b][i])
+            {
+                a = par[a][i];
+                b = par[b][i];
+            }
+        }
+        if (a != b)
+        {
+            a = par[a][0];
+            b = par[b][0];
+        }
+        val[a]--;
+        if (a != 0)
+            val[par[a][0]]--;
+    }
+    // for(auto c:val)cout<<c<<" ";
+    dfs2();
+    REP(i, 0, n)
+    {
+        cout << ans[i] << " ";
+    }
 }
 
 signed main()
@@ -120,7 +199,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

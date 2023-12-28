@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-08 11:40:40
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,84 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
+    int n;
+    cin >> n;
     vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    REP(i, 0, n)
+    cin >> a[i];
+    map<int, int> m;
+    for (auto c : a)
+        m[c]++;
+    vi ans(n);
+    int cnt = 0;
+    for (auto c : m)
+    {
+        if (c.s >= 2)
+        {
+            cnt++;
+            REP(i, 0, n)
+            {
+                if (a[i] == c.f)
+                {
+                    ans[i] = 1;
+                }
+            }
+            REP(i, 0, n)
+            {
+                if (a[i] == c.f)
+                {
+                    ans[i] = 2;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            REP(i, 0, n)
+            {
+                if (a[i] == c.f)
+                {
+                    ans[i] = 1;
+                }
+            }
+        }
+    }
+    if (cnt < 2)
+    {
+        cout << -1 << endl;
+        return;
+    }
+    for (auto c : m)
+    {
+        if (c.s >= 2)
+        {
+            REP(i, 0, n)
+            {
+                if (a[i] == c.f)
+                {
+                    ans[i] = 1;
+                }
+            }
+            REP(i, 0, n)
+            {
+                if (a[i] == c.f)
+                {
+                    ans[i] = 3;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    for(auto c:ans)cout<<c<<" ";
+    cout<<endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

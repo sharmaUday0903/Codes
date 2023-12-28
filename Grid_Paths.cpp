@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-03 16:08:33
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,12 +107,45 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    vector<vector<char>> a(n, vector<char>(n));
+    REP(i, 0, n)
+    {
+        REP(j, 0, n)
+        {
+            cin >> a[i][j];
+        }
+    }
+    vector<vector<int>> dp(n, vi(n));
+    REP(i, 0, n)
+    {
+        if (a[i][0] == '.')
+            dp[i][0] = 1;
+        else break;    
+    }
+    REP(i, 0, n)
+    {
+        if (a[0][i] == '.')
+            dp[0][i] = 1;
+        else break;    
+    }
+    REP(i, 1, n)
+    {
+        REP(j, 1, n)
+        {
+            if (a[i][j] == '.')
+            {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+            else
+            {
+                dp[i][j] = 0;
+            }
+            dp[i][j] %= MOD;
+        }
+    }
+    cout << dp[n - 1][n - 1];
 }
 
 signed main()
@@ -120,7 +153,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

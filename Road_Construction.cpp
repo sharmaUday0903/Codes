@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-09 01:14:55
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,57 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vi parent(maxl);
+vi siz(maxl);
+int find_set(int v)
+{
+    if (v == parent[v])
+        return v;
+    return parent[v] = find_set(parent[v]);
+}
+void make_set(int v)
+{
+    parent[v] = v;
+    siz[v] = 1;
+}
+
+bool union_sets(int a, int b)
+{
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b)
+    {
+        if (siz[a] < siz[b])
+            swap(a, b);
+        parent[b] = a;
+        siz[a] += siz[b];
+        return true;
+    }
+
+    return false;
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    REP(i, 0, n)
+    {
+        make_set(i);
+    }
+    int ans1 = n;
+    int ans2 = 1;
+    REP(i, 0, m)
+    {
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        if(union_sets(x,y))
+        {
+            ans1--;
+            ans2=max(ans2,siz[find_set(x)]);
+        }
+        cout << ans1 << " " << ans2 << endl;
+    }
 }
 
 signed main()
@@ -120,7 +163,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

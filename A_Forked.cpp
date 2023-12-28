@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-12-11 11:19:48
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,52 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int a, b;
+    cin >> a >> b;
+    int x1, y1;
+    cin >> x1 >> y1;
+    int x2, y2;
+    cin >> x2 >> y2;
+    set<pair<int, int>> s;
+    vi dx = {-a, a};
+    vi dy = { b, -b};
+    REP(i, 0, 2)
+    {
+        REP(j, 0, 2)
+        {
+          
+                s.insert({x1 + dx[i], y1 + dy[j]});
+                s.insert({x1 + dy[i], y1 + dx[j]});
+            
+        }
+    }
+    int ans = 0;
+    REP(i, 0, 2)
+    {
+        REP(j, 0, 2)
+        {
+           
+                if (s.find({x2 + dx[i], y2 + dy[j]}) != s.end())
+                {
+                    s.erase({x2 + dx[i], y2 + dy[j]});
+                    ans++;
+                }
+                if (s.find({x2 + dy[i], y2 + dx[j]}) != s.end())
+                {
+                    s.erase({x2 + dy[i], y2 + dx[j]});
+                    ans++;
+                }
+            
+        }
+    }
+    cout << ans << endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

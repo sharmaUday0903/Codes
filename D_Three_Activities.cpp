@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-12-19 20:23:22
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,71 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    vpi aa;
+    vpi bb;
+    vpi cc;
+    set<pair<int, int>> a, b, c;
+    REP(i, 0, n)
+    {
+        int x;
+        cin >> x;
+        a.insert({x, i});
+    }
+    REP(i, 0, n)
+    {
+        int x;
+        cin >> x;
+        b.insert({x, i});
+    }
+    REP(i, 0, n)
+    {
+        int x;
+        cin >> x;
+        c.insert({x, i});
+    }
+    REP(i, 0, 3)
+    {
+        pii p = *a.rbegin();
+        aa.pb(p);
+        a.erase(p);
+        pii q = *b.rbegin();
+        bb.pb(q);
+        b.erase(q);
+        pii r = *c.rbegin();
+        cc.pb(r);
+        c.erase(r);
+    }
+    
+    int ans = 0;
+    REP(i, 0, 3)
+    {
+        REP(j, 0, 3)
+        {
+            REP(k, 0, 3)
+            {
+                set<int> s;
+                s.insert(aa[i].s);
+                s.insert(bb[j].s);
+                s.insert(cc[k].s);
+                int p = aa[i].f + bb[j].f + cc[k].f;
+                int three=3;
+                if (s.size() == three)
+                {
+                    ans = max(ans, p);
+                }
+            }
+        }
+    }
+    cout<<ans<<endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

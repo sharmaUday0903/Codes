@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-03 01:44:54
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,14 +105,56 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    map<pii, int> m;
+    vi contained(n, 0);
+    vi contains(n, 0);
+    vpi v;
+    REP(i, 0, n)
+    {
+        int x, y;
+        cin >> x >> y;
+        v.pb({x, y});
+        m[{x, y}] = i;
+    }
+    auto comp = [](auto p1, auto p2)
+    {
+        if (p1.first < p2.first)
+            return true;
+        if (p1.first > p2.first)
+            return false;
+        return p1.second >= p2.second;
+    };
+    sort(v.begin(), v.end(), comp);
+    int mx = INT_MIN;
+    REP(i, 0, n)
+    {
+        if (v[i].s <= mx)
+        {
+            contained[m[{v[i].f, v[i].s}]] = 1;
+        }
+        mx = max(mx, v[i].s);
+    }
+    int mn = INF;
+    REPREV(i, 0, n)
+    {
+        if (v[i].s >= mn)
+        {
+            contains[m[{v[i].f, v[i].s}]] = 1;
+        }
+        mn = min(mn, v[i].s);
+    }
+
+    for (auto c : contains)
+        cout << c << " ";
+    cout << endl;
+    for (auto c : contained)
+        cout << c << " ";
+    cout << endl;
 }
 
 signed main()
@@ -120,7 +162,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

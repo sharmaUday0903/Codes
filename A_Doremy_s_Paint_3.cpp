@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-10-28 20:06:37
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,20 +107,54 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
+    int n;
+    cin >> n;
     vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    REP(i, 0, n)
+        cin >> a[i];
+    map<int, int> m;
+    for (auto c : a)
+        m[c]++;
+    if (m.size() > 2)
+    {
+        cout << "No\n";
+        return;
+    }
+    else if (m.size() == 1)
+    {
+        cout << "Yes\n";
+        return;
+        /* code */
+    }
+    int dif1=0;
+    int dif2=0;
+    bool u=true;
+    for(auto c:m)
+    {
+        if(u)
+        {
+            dif1=c.s;
+            u=false;
+        }
+        else
+        {
+            dif2=c.s;
+        }
+    }
+    int dif=abs(dif1-dif2);
+    if(dif<=1)
+    {
+         cout << "Yes\n";
+        return;
+    }
+    cout<<"No\n";
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

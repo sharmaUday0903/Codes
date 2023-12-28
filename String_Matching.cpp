@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-14 23:55:25
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,52 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+int rabin_karp(string const &s, string const &t)
+{
+    const int p = 31;
+    const int m = 1e9 + 9;
+    int S = s.size(), T = t.size();
+
+    vector<int> p_pow(max(S, T));
+    p_pow[0] = 1;
+    for (int i = 1; i < (int)p_pow.size(); i++)
+        p_pow[i] = (p_pow[i - 1] * p) % m;
+
+    vector<int> h(T + 1, 0);
+    for (int i = 0; i < T; i++)
+        h[i + 1] = (h[i] + (t[i] - 'a' + 1) * p_pow[i]) % m;
+    int h_s = 0;
+    for (int i = 0; i < S; i++)
+        h_s = (h_s + (s[i] - 'a' + 1) * p_pow[i]) % m;
+
+    int occurrences = 0;
+    for (int i = 0; i + S - 1 < T; i++)
+    {
+        int cur_h = (h[i + S] + m - h[i]) % m;
+        if (cur_h == h_s * p_pow[i] % m)
+            occurrences++;
+    }
+    return occurrences;
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    string t, s;
+    cin >> t >> s;
+    if (s.size() > t.size())
+    {
+        cout << 0 << endl;
+        return;
+    }
+    if (s.size() == t.size())
+    {
+        if (s == t)
+            cout << 1 << endl;
+        else
+            cout << 0 << endl;
+        return;
+    }
+    int ans = rabin_karp(s, t);
+    cout << ans << endl;
 }
 
 signed main()
@@ -120,7 +158,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-15 00:23:28
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 1e9 + 7;
+const int MOD = 99999989;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,36 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vector<int> prefix_function(string s)
+{
+    int n = (int)s.length();
+    vector<int> pi(n);
+    for (int i = 1; i < n; i++)
+    {
+        int j = pi[i - 1];
+        while (j > 0 && s[i] != s[j])
+            j = pi[j - 1];
+        if (s[i] == s[j])
+            j++;
+        pi[i] = j;
+    }
+    return pi;
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+
+    string S;
+    cin >> S;
+    vi pi=prefix_function(S);
+    vi ans;
+    int j=pi[S.size()-1];
+    while(j)
+    {
+        ans.pb(j);
+        j=pi[j-1];
+    }
+    sortv(ans);
+    for(auto c:ans)cout<<c<<" ";
 }
 
 signed main()
@@ -120,7 +142,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

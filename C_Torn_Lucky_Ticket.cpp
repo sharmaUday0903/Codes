@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-05 01:22:52
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,12 +107,55 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    vector<string> s(n);
+    REP(i, 0, n)
+    cin >> s[i];
+    map<pair<int,int>, int> m;
+    REP(i, 0, n)
+    {
+        int p = stoi(s[i]);
+        int sum = 0;
+        int tp = p;
+        while (tp)
+        {
+            sum += (tp % 10);
+            tp /= 10;
+        }
+        if (s[i].size() == 1)
+        {
+            m[{p,1}]++;
+        }
+        if (s[i].size() == 2)
+        {
+            m[{sum,2}]++;
+        }
+        if (s[i].size() == 3)
+        {
+            int s1 = sum - (s[i][0] - '0');
+            int s2 = sum - (s[i][2] - '0');
+            m[{s1,1}]++;
+            m[{s2,1}]++;
+        }
+        if (s[i].size() == 4)
+        {
+            m[{sum,4}]++;
+        }
+        if (s[i].size() == 5)
+        {
+            int s1 = sum - (s[i][0] - '0');
+            int s2 = sum - (s[i][4] - '0');
+            m[{s1,3}]++;
+            m[{s2,3}]++;
+        }
+    }
+    int ans=0;
+    for(auto c:m)
+    {
+        ans+=(c.s*(c.s-1))/2;
+    }
+    cout<<ans;
 }
 
 signed main()
@@ -120,7 +163,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

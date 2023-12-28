@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-03 00:20:38
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,12 +107,75 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
+    int n, k;
+    cin >> n >> k;
     vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    REP(i, 0, n)
+    cin >> a[i];
+    if (k == 1)
+    {
+        for (auto c : a)
+            cout << c << " ";
+        return;
+    }
+
+    if (k == 2)
+    {
+        REP(i, 1, n)
+        {
+            cout << min(a[i - 1], a[i]) << " ";
+        }
+        return;
+    }
+
+    set<pair<int, int>> l, r;
+    vpi temp;
+    REP(i, 0, k)
+    {
+        temp.pb({a[i], i});
+    }
+    sortv(temp);
+    REP(i, 0, (k + 1) / 2)
+    {
+        l.insert(temp[i]);
+    }
+    REP(i, (k + 1) / 2, k)
+    {
+        r.insert(temp[i]);
+    }
+    cout << l.rbegin()->first << " ";
+    REP(i, k, n)
+    {
+        if (l.find({a[i - k], i - k}) != l.end())
+        {
+            l.erase({a[i - k], i - k});
+        }
+        else
+        {
+            r.erase({a[i - k], i - k});
+        }
+        if (l.rbegin()->first < a[i])
+        {
+            r.insert({{a[i], i}});
+        }
+        else
+        {
+            l.insert({a[i], i});
+        }
+        while (l.size() < (k + 1) / 2)
+        {
+            pii x = *r.begin();
+            r.erase(x);
+            l.insert(x);
+        }
+        while (r.size() < (k) / 2)
+        {
+            pii x = *l.rbegin();
+            l.erase(x);
+            r.insert(x);
+        }
+        cout << l.rbegin()->first << " ";
+    }
 }
 
 signed main()
@@ -120,7 +183,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

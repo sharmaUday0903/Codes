@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-22 20:32:45
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,60 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+
+    int n;
+    cin >> n;
+    vi a(n), ca(n), b(n), cb(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    REP(i, 0, n)
+    cin >> ca[i];
+    REP(i, 0, n)
+    cin >> b[i];
+    REP(i, 0, n)
+    cin >> cb[i];
+    set<int> bb;
+    for (auto c : cb)
+        bb.insert(c);
+    map<int, multiset<int>> m;
+    REP(i, 0, n)
+    {
+        m[ca[i]].insert(a[i]);
+        m[cb[i]].insert(b[i]);
+    }
+    map<int, int> mp;
+    REP(i, 0, n)
+    {
+        if (bb.find(ca[i]) == bb.end())
+        {
+            if (mp[ca[i]] > a[i])
+            {
+                cout<<"No\n";
+                return;
+            }
+        }
+        mp[ca[i]] = max(mp[ca[i]], a[i]);
+    }
+    int last = 0;
+    REP(i, 0, n)
+    {
+        auto p = m[ca[i]].lower_bound(last);
+        if (p == m[ca[i]].end())
+        {
+            cout << "No\n";
+            return;
+        }
+        last = *p;
+        m[ca[i]].erase(m[ca[i]].find(last));
+    }
+    cout << "Yes\n";
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

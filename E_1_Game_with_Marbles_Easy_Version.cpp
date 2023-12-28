@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-12-19 21:49:49
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,67 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    multiset<pair<int, int>> s;
+    vi a(n), b(n);
+    REP(i, 0, n)
+    {
+        cin >> a[i];
+        s.insert({a[i], (i + 1)});
+    }
+    REP(i, 0, n)
+    {
+        cin >> b[i];
+        s.insert({b[i],  -1*(i + 1)});
+    }
+    vi ch(n, 0);
+    int in = 0;
+    REP(i, 0, 2 * n)
+    {
+        pii p = *s.rbegin();
+        s.erase(p);
+        if (ch[abs(p.s) - 1] != 0)
+            continue;
+
+        if (in % 2 == 0)
+        {
+
+            ch[abs(p.s) - 1] = 1;
+            in++;
+        }
+        else
+        {
+            ch[abs(p.s) - 1] = -1;
+            in++;
+        }
+    }
+    REP(i, 0, n)
+    {
+        if (ch[i] == 1)
+        {
+            a[i]--;
+            b[i] = 0;
+        }
+        else if (ch[i] == -1)
+        {
+            a[i] = 0;
+            b[i]--;
+        }
+    }
+    int ans = 0;
+    for (auto c : a)
+        ans += c;
+    for (auto c : b)
+        ans -= c;
+    cout << ans << endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-06 11:53:14
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,77 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    vvi adj(n);
+    vvi edges(m, vi(3));
+    REP(i, 0, m)
+    {
+        cin >> edges[i][0];
+        edges[i][0]--;
+        cin >> edges[i][1];
+        edges[i][1]--;
+        adj[edges[i][0]].pb(edges[i][1]);
+        cin >> edges[i][2];
+    }
+    vi dis(n, -1e18);
+    dis[0] = 0;
+    queue<int> q;
+    vi vis(n, 0);
+    REP(i, 0, n)
+    {
+        for (auto c : edges)
+        {
+            if (dis[c[0]] != -1e18)
+                if (dis[c[1]] < dis[c[0]] + c[2])
+                {
+                    dis[c[1]] = max(dis[c[1]], dis[c[0]] + c[2]);
+                    if (i == n - 1)
+                    {
+                        q.push(c[1]);
+                        vis[c[1]] = 1;
+                    }
+                }
+        }
+        // for (auto c : dis)
+        //     cout << c << " ";
+        // cout
+        //     << endl;
+    }
+
+    int x = -1;
+
+    while (!q.empty())
+    {
+        int p = q.front();
+        // cout << p << " ";
+        q.pop();
+                if (p == n - 1)
+                {
+                    x = n - 1;
+                }
+        for (auto c : adj[p])
+        {
+            if (!vis[c])
+            {
+
+                q.push(c);
+                vis[c] = 1;
+            }
+        }
+    }
+    if (x != -1)
+    {
+        cout << -1 << endl;
+        return;
+    }
+    cout << dis[n - 1];
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
     while (t--)
         solve();
 }

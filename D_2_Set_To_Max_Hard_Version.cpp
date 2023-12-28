@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-12-12 12:07:34
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,106 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    vi a(n), b(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    REP(i, 0, n)
+    cin >> b[i];
+
+    int lg[maxl + 1];
+    lg[1] = 0;
+    for (int i = 2; i <= maxl; i++)
+        lg[i] = lg[i / 2] + 1;
+
+    int K = 18;
+    vvi st1(K, vi(maxl));
+
+    REP(i, 0, n)
+    {
+        st1[0][i] = a[i];
+    }
+
+    for (int i = 1; i <= K; i++)
+    {
+        for (int j = 0; j + (1 << i) <= n; j++)
+        {
+            st1[i][j] = max(st1[i - 1][j], st1[i - 1][j + (1 << (i - 1))]);
+        }
+    }
+
+    vvi st2(K, vi(maxl));
+
+    REP(i, 0, n)
+    {
+        st2[0][i] = b[i];
+    }
+
+    for (int i = 1; i <= K; i++)
+    {
+        for (int j = 0; j + (1 << i) <= n; j++)
+        {
+            st2[i][j] = min(st2[i - 1][j], st2[i - 1][j + (1 << (i - 1))]);
+        }
+    }
+
+    vi left(n, -1);
+    vi right(n, -1);
+    unordered_map<int, int> m;
+    REP(i, 0, n)
+    {
+        m[a[i]] = i;
+        if (m.find(b[i]) != m.end())
+        {
+            left[i] = m[b[i]];
+        }
+    }
+    m.clear();
+
+    REPREV(i, 0, n)
+    {
+        m[a[i]] = i;
+        if (m.find(b[i]) != m.end())
+        {
+            right[i] = m[b[i]];
+        }
+    }
+
+    REP(i, 0, n)
+    {
+        if (left[i] != -1)
+        {
+            int i1 = lg[i - left[i] + 1];
+            int min1 = min(st2[i1][left[i]], st2[i1][i - (1 << i1) + 1]);
+            int max1 = max(st1[i1][left[i]], st1[i1][i - (1 << i1) + 1]);
+           
+            if (min1 >= b[i] && max1 <= b[i])
+            {
+                continue;
+            }
+        }
+        if (right[i] != -1)
+        {
+            int i1 = lg[right[i] - i + 1];
+            int min1 = min(st2[i1][i], st2[i1][right[i] - (1 << i1) + 1]);
+            int max1 = max(st1[i1][i], st1[i1][right[i] - (1 << i1) + 1]);
+            if (min1 >= b[i] && max1 <= b[i])
+            {
+                continue;
+            }
+        }
+        cout << "NO\n";
+        return;
+    }
+    cout << "YES\n";
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

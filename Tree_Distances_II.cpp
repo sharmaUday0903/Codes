@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-13 12:51:38
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,54 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vvi adj(maxl);
+vi sub(maxl);
+vi d(maxl);
+int n;
+vi ans(maxl);
+
+void dfs1(int u = 0, int p = -1)
+{
+    sub[u] = 1;
+    for (auto c : adj[u])
+    {
+        if (c == p)
+            continue;
+        d[c] = d[u] + 1;
+        dfs1(c, u);
+        sub[u] += sub[c];
+    }
+}
+void dfs2(int u, int sum, int p = -1)
+{
+    ans[u] = sum;
+    for (auto c : adj[u])
+    {
+        if (c == p)
+            continue;
+        dfs2(c, sum - sub[c] + (n - sub[c]),u);
+    }
+}
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    cin >> n;
+    REP(i, 0, n-1)
+    {
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        adj[x].pb(y);
+        adj[y].pb(x);
+    }
+    dfs1();
+    int sum = 0;
+    REP(i, 0, n)
+    sum += d[i];
+    dfs2(0, sum);
+    REP(i, 0, n)
+    {
+        cout << ans[i] << " ";
+    }
 }
 
 signed main()
@@ -120,7 +160,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

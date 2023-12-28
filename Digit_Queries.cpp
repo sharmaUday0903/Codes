@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-03 12:00:06
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,12 +107,55 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int q;
+    cin >> q;
+    vi powerOfTen(19, 1);
+    REP(i, 1, 19)
+    {
+        powerOfTen[i] = powerOfTen[i - 1] * 10;
+    }
+    while (q--)
+    {
+        int index;
+        cin >> index;
+        int dsf = 0;
+        int dbab = 0;
+        int nod;
+        REP(i, 1, 19)
+        {
+            dsf += (powerOfTen[i] - powerOfTen[i - 1]) * i;
+            if (dsf >= index)
+            {
+                nod = i;
+                break;
+            }
+            dbab += (powerOfTen[i] - powerOfTen[i - 1]) * i;
+        }
+        int s = powerOfTen[nod - 1];
+        int l = powerOfTen[nod] - 1;
+        int b = 0;
+        int spbv;
+        while (s <= l)
+        {
+            int av = (s + l) / 2;
+            int spoav = dbab + 1 + (av - powerOfTen[nod - 1]) * nod;
+            if (spoav <= index)
+            {
+                if (av > b)
+                {
+                    b = av;
+                    spbv = spoav;
+                }
+                s = av + 1;
+            }
+            else
+            {
+                l = av - 1;
+            }
+        }
+        string num = to_string(b);
+        cout << num[index - spbv] << endl;
+    }
 }
 
 signed main()
@@ -120,7 +163,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

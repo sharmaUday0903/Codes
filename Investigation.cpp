@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-11-08 17:25:34
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -105,14 +105,55 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n, m;
+    cin >> n >> m;
+    vector<vector<pair<int, int>>> adj(n);
+    REP(i, 0, m)
+    {
+        int a, b, c;
+        cin >> a >> b >> c;
+        a--, b--;
+        adj[a].pb({b, c});
+    }
+    vi dis(n,INF);
+    vi ways(n);
+    vi maxf(n);
+    vi minf(n);
+    vi vis(n, 0);
+    priority_queue<pii, vpi, greater<pii>> pq;
+    dis[0] = 0;
+    ways[0] = 1;
+    pq.push({0, 0});
+    while (!pq.empty())
+    {
+        int p = pq.top().second;
+        pq.pop();
+        if (vis[p])
+            continue;
+        vis[p] = 1;
+        for (auto c : adj[p])
+        {
+            int d = c.s + dis[p];
+            if (d == dis[c.f])
+            {
+                ways[c.f] = (ways[c.f] + ways[p]) % MOD;
+                minf[c.f] = min(minf[c.f], minf[p] + 1);
+                maxf[c.f] = max(maxf[c.f], maxf[p] + 1);
+            }
+            else if (d < dis[c.f])
+            {
+                ways[c.f] = (ways[p]) % MOD;
+                minf[c.f] = minf[p] + 1;
+                maxf[c.f] = maxf[p] + 1;
+                dis[c.f] = d;
+                pq.push({d, c.f});
+            }
+        }
+    }
+    cout << dis[n - 1] << " " <<ways[n - 1] <<" "<< minf[n - 1] << " " << maxf[n - 1];
 }
 
 signed main()
@@ -120,7 +161,6 @@ signed main()
     fast;
     int t = 1;
     // cin >> t;
-    
     while (t--)
         solve();
 }

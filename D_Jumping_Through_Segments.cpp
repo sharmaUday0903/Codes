@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-12-12 16:36:50
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,7 +73,7 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
@@ -107,20 +107,54 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    vpi v(n);
+    REP(i, 0, n)
+    {
+        cin >> v[i].f >> v[i].s;
+    }
+    int l = 0, r = INF;
+    while (l <= r)
+    {
+        int mid = (l + r) / 2;
+        bool u = true;
+        int lasts = 0;
+        int laste = 0;
+        for (auto c : v)
+        {
+            lasts-=mid;
+            laste+=mid;
+            lasts=max(lasts,c.f);
+            laste=min(laste,c.s);
+            if(lasts<=laste&&lasts>=c.f&&laste<=c.s)
+            {
+
+            }
+            else
+            {
+                u=false;
+            }
+            
+        }
+        if (!u)
+        {
+            l = mid + 1;
+        }
+        else
+        {
+            r = mid - 1;
+        }
+        // cout << mid << endl;
+    }
+    cout << l << endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }

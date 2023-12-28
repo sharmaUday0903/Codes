@@ -1,4 +1,4 @@
-// 2023-10-30 10:36:38
+// 2023-12-14 13:46:32
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -73,25 +73,33 @@ int power(int x, int y, int mod)
 }
 int inversemod(int n, int mod)
 {
-    return power(n, mod - 2) % MOD;
+    return power(n, mod - 2, mod) % MOD;
 }
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
 // at last use lazy porpogation to update a segment from xl to xr
-const int maxl = 2e5 + 5;
+const int maxl = 1e6 + 10;
 bool isprime[maxl];
 int fact[maxl];
+vi spf(maxl);
 void sieve()
 {
     memset(isprime, true, sizeof(isprime));
 
     isprime[0] = isprime[1] = false;
-    for (int i = 2; i * i < maxl; i++)
+    for (int i = 2; i  <= maxl; i++)
     {
         if (isprime[i])
         {
-            for (int j = i * i; j < maxl; j += i)
-                isprime[j] = false;
+            spf[i] = i;
+            for (int j = i * i; j <= maxl; j += i)
+            {
+                if (isprime[j])
+                {
+                    isprime[j] = false;
+                    spf[j] = i;
+                }
+            }
         }
     }
 }
@@ -107,20 +115,29 @@ void inifact()
 }
 void solve()
 {
-    int n;cin>>n;
-    set<int>s;
-    vi a(n);
-    REP(i,0,n){cin>>a[i];
-    s.insert(a[i]);}
-    cout<<s.size();
+    int n;
+    cin >> n;
+    int ans = 1;
+    while (n != 1)
+    {
+        int p = spf[n];
+        int cnt = 0;
+        while (n % p == 0)
+        {
+            cnt++;
+            n /= p;
+        }
+        ans *= (cnt+1);
+    }
+    cout << ans << endl;
 }
 
 signed main()
 {
     fast;
+    sieve();
     int t = 1;
-    // cin >> t;
-    
+    cin >> t;
     while (t--)
         solve();
 }
