@@ -107,9 +107,9 @@ void inifact()
 }
 int gp(int p, int e)
 {
-    int nr=(power(p,e+1,MOD)-1+MOD)%MOD;
-    int dri=inversemod(p-1,MOD);
-    return (nr*dri)%MOD;
+    int nr = (power(p, e + 1, MOD) - 1 + MOD) % MOD;
+    int dri = inversemod(p - 1, MOD);
+    return (nr * dri) % MOD;
 }
 void solve()
 {
@@ -120,16 +120,56 @@ void solve()
     REP(i, 0, n)
     cin >> prime[i] >> exp[i];
     int NOD = 1;
-    REP(i, 1, n)
+    REP(i, 0, n)
     NOD = (NOD * (exp[i] + 1)) % MOD;
 
     int SOD = 1;
     REP(i, 0, n)
     SOD = (SOD * gp(prime[i], exp[i])) % MOD;
 
+    int MODD = 1;
+    bool odd = 0;
+    int POO;
+    REP(i, 0, n)
+    {
+        if (exp[i] % 2 == 1)
+        {
+            odd = 1;
+            POO = i;
+        }
+    }
+    if (odd)
+    {
+        int OE = 1;
+        REP(i, 0, n)
+        {
+            if (i == POO)
+            {
+                OE = (OE * (exp[i] + 1) / 2) % (MOD - 1);
+            }
+            else
+                OE = (OE * (exp[i] + 1)) % (MOD - 1);
+        }
+        REP(i, 0, n)
+        {
+            MODD = (MODD * power(prime[i], (exp[i] * OE) % (MOD - 1), MOD)) % MOD;
+        }
+    }
+    else
+    {
+        int OE = 1;
+        REP(i, 0, n)
+        {
 
+            OE = (OE * (exp[i] + 1)) % (MOD - 1);
+        }
+        REP(i, 0, n)
+        {
+            MODD = (MODD * power(prime[i], ((exp[i] / 2) * OE) % (MOD - 1), MOD)) % MOD;
+        }
+    }
 
-    cout<<NOD<<" "<<SOD<<" "<<MODD<<endl;
+    cout << NOD << " " << SOD << " " << MODD << endl;
 }
 
 signed main()
