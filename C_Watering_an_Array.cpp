@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2023-12-28 10:37:16
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -105,61 +105,42 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, k, d;
+    cin >> n >> k >> d;
     vi a(n);
+    vi b(k);
     REP(i, 0, n)
     cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
+    REP(i, 0, k)
+    cin >> b[i];
+    int ans = 0;
+    int cnt = 0;
     REP(i, 0, n)
     {
-        while (!st.empty() && a[st.top()] > a[i])
-        {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
-        }
-        else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
+        if (a[i] == i + 1)
+            cnt++;
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
+    int p = cnt + (d  - 1) / 2;
+    ans = max(ans, p);
+    REP(i, 0, min(d-1, 2 * n + 2))
     {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
+
+        REP(j, 0, b[i%k])
         {
-            ans=(ans+dp[i])%MOD;
+            a[j]++;
         }
+        int cnt = 0;
+        REP(i, 0, n)
+        {
+            if (a[i] == i + 1)
+                cnt++;
+        }
+        int p = cnt + (d  - (i + 2)) / 2;
+        ans = max(ans, p);
     }
-    cout<<ans<<endl;
+    cout << ans << endl;
 }
 
 signed main()

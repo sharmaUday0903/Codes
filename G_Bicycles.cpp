@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2023-12-29 11:20:09
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -105,59 +105,48 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n);
-    REP(i, 0, n)
-    cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
-    REP(i, 0, n)
+    int n, m;
+    cin >> n >> m;
+    vector<vector<pair<int, int>>> adj(n);
+    REP(i, 0, m)
     {
-        while (!st.empty() && a[st.top()] > a[i])
-        {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
-        }
-        else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
+        int u, v, w;
+        cin >> u >> v >> w;
+        u--, v--;
+        adj[u].pb({v, w});
+        adj[v].pb({u, w});
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
+    vi s(n);
+    REP(i, 0, n)
+    cin >> s[i];
+    vvi dist(n, vi(1001, INF));
+    dist[0][s[0]] = 0;
+    priority_queue<vi, vvi, greater<vi>> pq;
+    pq.push({0, 0, s[0]});
+    while (!pq.empty())
     {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
+        vi top = pq.top();
+        pq.pop();
+        int f = top[0], se = top[1], t = top[2];
+        if (f > dist[se][t])
+            continue;
+        for (auto c : adj[se])
         {
-            ans=(ans+dp[i])%MOD;
+            int nd = dist[se][t] + c.s * t;
+            int ns = min(t, s[c.f]);
+            if (nd < dist[c.f][ns])
+            {
+                dist[c.f][ns] = nd;
+                pq.push({nd, c.f, ns});
+            }
         }
+    }
+    int ans=INF;
+    REP(i,1,1001)
+    {
+        ans=min(ans,dist[n-1][i]);
     }
     cout<<ans<<endl;
 }

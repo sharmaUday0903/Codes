@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2024-01-11 16:15:44
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -105,68 +105,58 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n);
+    int n, m;
+    cin >> n >> m;
+    vi w(n);
     REP(i, 0, n)
-    cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
-    REP(i, 0, n)
+    cin >> w[i];
+    vvi adj(n);
+    REP(i, 0, m)
     {
-        while (!st.empty() && a[st.top()] > a[i])
-        {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
-        }
-        else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        adj[x].pb(y);
+        adj[y].pb(x);
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
+
+    vi dp(n, 0);
+    dp[0] = 1;
+    priority_queue<pii, vpi, greater<pii>> q;
+    q.push({1, 0});
+    while (!q.empty())
     {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
+        int v = q.top().second;
+        int d_v = q.top().first;
+        q.pop();
+        if (d_v != dp[v])
+            continue;
+        for (auto c : adj[v])
         {
-            ans=(ans+dp[i])%MOD;
+            if (w[c] > w[v]&&dp[c]<dp[v]+1)
+            {
+                dp[c] = max(dp[v] + 1, dp[c]);
+                q.push({dp[c], c});
+            }
+            else if (w[c] == w[v])
+            {
+                dp[c] = max(dp[c], dp[v]);
+                // q.push({dp[c], c});
+            }
         }
     }
-    cout<<ans<<endl;
+
+    cout << dp[n - 1] << endl;
 }
 
 signed main()
 {
     fast;
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
         solve();
 }

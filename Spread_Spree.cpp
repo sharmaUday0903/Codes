@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2024-01-18 19:52:21
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,61 +105,32 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n);
-    REP(i, 0, n)
-    cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
-    REP(i, 0, n)
+    int a, b;
+    cin >> a >> b;
+    if (a < b)
+        swap(a, b);
+    int b1 = min(b, a / 2);
+    int ans = 0;
+    int r1=b-b1;
+    r1/2;
+    int p = (a + 1) / 2;
+    // int q1 = (((b+1)/2) * (((b+1)/2) + 1)) / 2 - (b1 * (b1 + 1))/2;
+    int q1=(b*(b+1))/2-;
+    q1 %= MOD;
+    cout<<q1<<" ";
+    int a1 = (p * q1) % MOD;
+    ans = (ans + a1) % MOD;
+    if (a % 2 == 0)
     {
-        while (!st.empty() && a[st.top()] > a[i])
-        {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
-        }
-        else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
+        p = (a + 2) / 2;
+          q1 = (((b+1)/2) * (((b+1)/2) + 1)) / 2 - (b1 * (b1 + 1))/2;
+        q1 %= MOD;
+        int a2 = (p * q1) % MOD;
+        ans = (ans + a2) % MOD;
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
-    {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
-        {
-            ans=(ans+dp[i])%MOD;
-        }
-    }
-    cout<<ans<<endl;
+    cout << ans << endl;
 }
 
 signed main()

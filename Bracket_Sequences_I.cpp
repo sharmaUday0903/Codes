@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2024-01-01 18:58:05
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -78,7 +78,7 @@ int inversemod(int n, int mod)
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
 // at last use lazy porpogation to update a segment from xl to xr
-const int maxl = 2e5 + 5;
+const int maxl = 2e6 + 5;
 bool isprime[maxl];
 int fact[maxl];
 void sieve()
@@ -105,60 +105,19 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
     int n;
     cin >> n;
-    vi a(n);
-    REP(i, 0, n)
-    cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
-    REP(i, 0, n)
+    inifact();
+    if (n & 1)
     {
-        while (!st.empty() && a[st.top()] > a[i])
-        {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
-        }
-        else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
+        cout << 0 << endl;
+        return;
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
-    {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
-        {
-            ans=(ans+dp[i])%MOD;
-        }
-    }
+    n/=2;
+    int ans=(fact[2*n]*inversemod(fact[n+1],MOD))%MOD;
+    ans=(ans*inversemod(fact[n],MOD))%MOD;
     cout<<ans<<endl;
 }
 
@@ -166,7 +125,7 @@ signed main()
 {
     fast;
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
         solve();
 }

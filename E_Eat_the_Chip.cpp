@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2024-01-15 21:03:56
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -105,61 +105,55 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n);
-    REP(i, 0, n)
-    cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
-    REP(i, 0, n)
+    int h, w, xa, ya, xb, yb;
+    cin >> h >> w >> xa >> ya >> xb >> yb;
+    if (xa >= xb)
     {
-        while (!st.empty() && a[st.top()] > a[i])
-        {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
-        }
-        else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
+        cout << "Draw\n";
+        return;
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
+    int dif = xb - xa;
+    if (dif % 2 == 1)
     {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
+        int f = (dif + 1) / 2;
+
+        int e1 = min(w, f + ya);
+        int e2 = min(w, f + yb-1);
+        // if (e1 >= e2)
+        // {
+        //     cout << "Alice\n";
+        //     return;
+        // }
+        int e3 = max((int)1, ya - f);
+        int e4 = max((int)1, yb - f+1);
+        if ((e3) <= e4 && (e1) >= e2)
         {
-            ans=(ans+dp[i])%MOD;
+            cout << "Alice\n";
+            return;
         }
     }
-    cout<<ans<<endl;
+    else
+    {
+        int f = (dif + 1) / 2;
+
+        int e1 = min(w, f + ya);
+        int e2 = min(w, f + yb);
+        // if (e2 >= e1)
+        // {
+        //     cout << "Bob\n";
+        //     return;
+        // }
+        int e3 = max((int)1, ya - f);
+        int e4 = max((int)1, yb - f);
+        if (e4 <= e3 && e2 >= e1)
+        {
+            cout << "Bob\n";
+            return;
+        }
+    }
+    cout << "Draw\n";
 }
 
 signed main()

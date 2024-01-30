@@ -1,4 +1,4 @@
-// 2023-12-19 21:49:49
+// 2023-12-29 12:11:50
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -109,58 +109,29 @@ void solve()
 {
     int n;
     cin >> n;
-    multiset<pair<int, int>> s;
     vi a(n), b(n);
     REP(i, 0, n)
-    {
-        cin >> a[i];
-        s.insert({a[i], (i + 1)});
-    }
+    cin >> a[i];
+    REP(i, 0, n)
+    cin >> b[i];
+    vvi c;
+    REP(i, 0, n)
+    c.pb({a[i] + b[i], a[i], b[i]});
+    sortv(c);
+    reverse(c.begin(),c.end());
+    int ans = 0;
     REP(i, 0, n)
     {
-        cin >> b[i];
-        s.insert({b[i],  -1*(i + 1)});
-    }
-    vi ch(n, 0);
-    int in = 0;
-    REP(i, 0, 2 * n)
-    {
-        pii p = *s.rbegin();
-        s.erase(p);
-        if (ch[abs(p.s) - 1] != 0)
-            continue;
-
-        if (in % 2 == 0)
+        if (i % 2 == 0)
         {
-
-            ch[abs(p.s) - 1] = 1;
-            in++;
+            ans+=(c[i][1]-1);
         }
         else
         {
-            ch[abs(p.s) - 1] = -1;
-            in++;
+            ans-=(c[i][2]-1);
         }
     }
-    REP(i, 0, n)
-    {
-        if (ch[i] == 1)
-        {
-            a[i]--;
-            b[i] = 0;
-        }
-        else if (ch[i] == -1)
-        {
-            a[i] = 0;
-            b[i]--;
-        }
-    }
-    int ans = 0;
-    for (auto c : a)
-        ans += c;
-    for (auto c : b)
-        ans -= c;
-    cout << ans << endl;
+    cout<<ans<<endl;
 }
 
 signed main()

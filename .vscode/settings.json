@@ -1,7 +1,17 @@
 {
     "files.associations": {
         "*.cpp": "cpp",
+        "ostream": "cpp",
+        "vector": "cpp",
         "iostream": "cpp",
-        "ostream": "cpp"
+        "deque": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "unordered_map": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "utility": "cpp",
+        "queue": "cpp"
     }
 }

@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2024-01-15 20:08:10
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -105,60 +105,38 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
     int n;
     cin >> n;
-    vi a(n);
-    REP(i, 0, n)
-    cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
+    string s1, s2;
+    cin >> s1 >> s2;
+    int cnt1 = 0, cnt2 = 0;
     REP(i, 0, n)
     {
-        while (!st.empty() && a[st.top()] > a[i])
+        if (s1[i] == '0' && s2[i] == '1')
         {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
+            cnt1++;
         }
-        if (st.empty())
+        if (s2[i] == '0' && s1[i] == '1')
         {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
+            cnt2++;
         }
-        else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
+    int c1 = count(s1.begin(), s1.end(), '1');
+    int c2 = count(s2.begin(), s2.end(), '1');
+    int ans = 0;
+    if (c1 >= c2)
     {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
-        {
-            ans=(ans+dp[i])%MOD;
-        }
+        cnt2 -= (c1 - c2);
+        ans = c1 - c2;
     }
+    else
+    {
+        cnt1 -= (c2 - c1);
+        ans = c2 - c1;
+    }
+    ans+=cnt1;
     cout<<ans<<endl;
 }
 

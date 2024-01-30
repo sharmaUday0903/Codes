@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2023-12-28 20:30:19
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -105,20 +105,6 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
     int n;
@@ -126,40 +112,59 @@ void solve()
     vi a(n);
     REP(i, 0, n)
     cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
+    if (n == 1)
+    {
+        cout << "NO\n";
+        return;
+    }
+    int osum = 0;
+    int esum = 0;
+    set<int> odif;
+    set<int> edif;
     REP(i, 0, n)
     {
-        while (!st.empty() && a[st.top()] > a[i])
+        if (i % 2 == 0)
         {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
+            osum += a[i];
         }
         else
         {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
+            esum += a[i];
         }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
-    }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
-    {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
+        if (osum == esum)
         {
-            ans=(ans+dp[i])%MOD;
+            cout << "YES\n";
+            return;
+        }
+        if (osum > esum)
+        {
+            int p = osum - esum;
+            if (odif.find(p) != odif.end())
+            {
+                cout << "YES\n";
+                return;
+            }
+        }
+        else if (osum < esum)
+        {
+            int p = esum - osum;
+            if (edif.find(p) != edif.end())
+            {
+                
+                cout << "YES\n";
+                return;
+            }
+        }
+        if (osum>esum)
+        {
+            odif.insert(osum - esum);
+        }
+        if (osum<esum)
+        {
+            edif.insert(esum - osum);
         }
     }
-    cout<<ans<<endl;
+    cout << "NO\n";
 }
 
 signed main()

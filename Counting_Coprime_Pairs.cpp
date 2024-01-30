@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2024-01-01 16:26:49
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -23,7 +23,7 @@ using namespace std;
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
 const int INF = 1e15;
-const int MOD = 998244353;
+const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
     return ceil(log(x) / log(y));
@@ -78,7 +78,7 @@ int inversemod(int n, int mod)
 // For solving union of segments from point xl to xr Use segment tree with lazy propogation to store
 //  number of segements that have point i for leaf and other intermediate nodes for minimum of them
 // at last use lazy porpogation to update a segment from xl to xr
-const int maxl = 2e5 + 5;
+const int maxl = 1e6 + 5;
 bool isprime[maxl];
 int fact[maxl];
 void sieve()
@@ -105,20 +105,6 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
-{
-    if (l > r)
-    {
-        return 0;
-    }
-    int ans = pref[r];
-    if (l > 0)
-    {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
-    }
-    return ans;
-}
 void solve()
 {
     int n;
@@ -126,38 +112,46 @@ void solve()
     vi a(n);
     REP(i, 0, n)
     cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
-    REP(i, 0, n)
+    vvi NOD(maxl);
+    REP(i, 2, maxl)
     {
-        while (!st.empty() && a[st.top()] > a[i])
+        if (NOD[i].size() == 0)
+            for (int j = i; j < maxl; j += i)
+            {
+                NOD[j].pb(i);
+            }
+    }
+    vi NOP(maxl);
+    vi NOV(maxl,0);
+
+    for (auto c : a)
+    {
+        int p = NOD[c].size();
+        for (int i = 1; i < (1 << p); i++)
         {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
+            int cnt = 0;
+            int val = 1;
+            for (int j = 0; j < p; j++)
+            {
+                if ((1 << j) & i)
+                {
+                    val *= NOD[c][j];
+                    cnt++;
+                }
+            }
+            NOP[val] = cnt;
+            NOV[val]++;
         }
-        if (st.empty())
+    }
+    int ans = (n * (n - 1)) / 2;
+    REP(i, 0, maxl)
+    {
+        if (NOP[i] % 2 == 0)
         {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
+            ans += (NOV[i] * (NOV[i]-1) / 2);
         }
         else
-        {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
-        }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
-    }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
-    {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
-        {
-            ans=(ans+dp[i])%MOD;
-        }
+            ans -= (NOV[i] * (NOV[i]- 1) / 2);
     }
     cout<<ans<<endl;
 }
@@ -166,7 +160,7 @@ signed main()
 {
     fast;
     int t = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
         solve();
 }

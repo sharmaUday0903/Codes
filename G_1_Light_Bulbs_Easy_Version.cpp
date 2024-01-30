@@ -1,4 +1,4 @@
-// 2023-12-29 16:45:02
+// 2023-12-29 13:21:44
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,61 +105,67 @@ void inifact()
         fact[i] %= MOD;
     }
 }
-int query(vector<int> &pref, int l, int r)
+int ans2 = 1;
+int cnt = 0;
+void calc(vi &a, vpi &seg, vi &vis, int c)
 {
-    if (l > r)
+    // cout << c << endl;
+    cnt += 2;
+    vis[c] = 1;
+    map<int, int> last;
+    for (int i = seg[c].f; i < seg[c].s; i++)
     {
-        return 0;
+        last[a[i]]++;
     }
-    int ans = pref[r];
-    if (l > 0)
+    for (auto c : last)
     {
-        // sub(ans, pref[l - 1]);
-        ans=(ans-pref[l-1]+MOD)%MOD;
+
+        if (c.s == 1 && vis[c.f] == 0)
+        {
+            calc(a, seg, vis, c.f);
+        }
     }
-    return ans;
+    // return cnt;
 }
 void solve()
 {
     int n;
     cin >> n;
-    vi a(n);
-    REP(i, 0, n)
+    vi a(2 * n);
+    REP(i, 0, 2 * n)
     cin >> a[i];
-    vi dp(n), pref(n);
-    stack<int> st;
-    int dpsum = 0;
-    REP(i, 0, n)
+    int ans1 = 0;
+    // int ans2 = 1;
+    vi ch;
+    int sum = 0;
+    map<int, int> m;
+    vpi seg(n + 1);
+    REP(i, 0, 2 * n)
     {
-        while (!st.empty() && a[st.top()] > a[i])
+        if (sum == 0)
+            ch.pb(a[i]);
+        if (m[a[i]] == 0)
         {
-            dpsum = (dpsum - dp[st.top()] + MOD) % MOD;
-            st.pop();
-        }
-        if (st.empty())
-        {
-            dp[i] = (dp[i] +1 + (i ? pref[i - 1] : 0)) % MOD;
+            sum += 1;
+            seg[a[i]].f = i;
         }
         else
         {
-            dp[i]=dpsum;
-            dp[i] = (dp[i] + query(pref, st.top() + 1, i - 1)) % MOD;
+            sum += -1;
+            seg[a[i]].s = i;
         }
-        pref[i]=i?pref[i-1]:0;
-        pref[i]=(pref[i]+dp[i])%MOD;
-        st.push(i);
-        dpsum=(dpsum+dp[i])%MOD;
+        m[a[i]] = 1;
     }
-    int mn=INF,ans=0;
-    REPREV(i,0,n)
+    ans1 = ch.size();
+    ans2 = 1;
+    vi vis(n + 1, 0);
+    for (auto c : ch)
     {
-        mn=min(mn,a[i]);
-        if(mn==a[i])
-        {
-            ans=(ans+dp[i])%MOD;
-        }
+        cnt = 0;
+        calc(a, seg, vis, c);
+        ans2 = (ans2 * cnt) % MOD;
     }
-    cout<<ans<<endl;
+    cout << ans1 << " " << ans2 << endl;
 }
 
 signed main()
