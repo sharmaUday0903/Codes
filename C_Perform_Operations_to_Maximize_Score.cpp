@@ -1,4 +1,4 @@
-// 2024-08-28 20:08:44
+// 2024-08-19 23:27:42
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,42 +107,63 @@ void inifact()
 }
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
     vi a(n);
     REP(i, 0, n)
     cin >> a[i];
-    int ans = 0;
-    vi temp;
-    int mn = INF;
-    bool z = false;
+    vi b(n);
+    REP(i, 0, n)
+    cin >> b[i];
+    vpi v;
     REP(i, 0, n)
     {
-        mn = min(mn, abs(a[i]));
-        if (a[i] < 0)
-            temp.pb(a[i]);
-        if (a[i] > 0)
+        v.pb({a[i], b[i]});
+    }
+    sortv(v);
+    int ans = 0;
+    REP(i, 0, n)
+    {
+        if (v[i].s == 1)
         {
-            ans += a[i];
+            int val;
+            if (i < n / 2)
+                val = v[n / 2].f;
+            else
+                val = v[(n - 2) / 2].f;
+            ans = max(ans, v[i].f + k + val);
         }
-        if (a[i] == 0)
-            z = true;
     }
-    sortv(temp);
-    int nn = temp.size();
-    REP(i, 0, nn - 1)
+    int l = 0, h = 2e9;
+    while (l != h)
     {
-        ans += abs(temp[i]);
-        ans += abs(temp[i + 1]);
-        i++;
+        int mid = (1+l + h) / 2;
+        int z = 0;
+        vi sm;
+        REP(i, 0, n - 1)
+        {
+            if (v[i].f >= mid)
+                z++;
+            else if (v[i].s == 1)
+                sm.pb(mid - v[i].f);
+        }
+        reverse(sm.begin(), sm.end());
+        int kk = k;
+        for (auto x : sm)
+        {
+            if (kk >= x)
+            {
+                kk -= x;
+                z++;
+            }
+        }
+        if (z >= (n + 1) / 2)
+            l = mid;
+        else
+            h = mid - 1;
     }
-    if (temp.size() % 2 == 1)
-    {
-      
-            ans = ans + abs(temp[nn - 1]) - 2*mn;
-        
-    }
-    cout<<ans<<endl;
+    ans = max(ans, v[n - 1].f + l);
+    cout << ans << endl;
 }
 
 signed main()

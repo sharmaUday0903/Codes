@@ -1,4 +1,4 @@
-// 2024-08-28 20:08:44
+// 2024-08-15 02:03:11
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -112,37 +112,43 @@ void solve()
     vi a(n);
     REP(i, 0, n)
     cin >> a[i];
-    int ans = 0;
-    vi temp;
-    int mn = INF;
-    bool z = false;
-    REP(i, 0, n)
+    int m;
+    cin >> m;
+    REP(i, 0, m)
     {
-        mn = min(mn, abs(a[i]));
-        if (a[i] < 0)
-            temp.pb(a[i]);
-        if (a[i] > 0)
+        string s;
+        cin >> s;
+        map<char, int> mp1;
+        map<int, char> mp2;
+        if (s.size() != n)
         {
-            ans += a[i];
+            cout << "NO\n";
+            continue;
         }
-        if (a[i] == 0)
-            z = true;
+        bool u = true;
+        REP(i, 0, n)
+        {
+            if ((mp1.find(s[i]) == mp1.end()) && (mp2.find(a[i]) == mp2.end()))
+            {
+                mp1[s[i]] = a[i];
+                mp2[a[i]] = s[i];
+            }
+            else if ((mp1.find(s[i]) == mp1.end()) || (mp2.find(a[i]) == mp2.end()))
+            {
+                u = false;
+                break;
+            }
+            else
+            {
+                if (mp1[s[i]] != a[i] || mp2[a[i]] != s[i])
+                {
+                    u = false;
+                    break;
+                }
+            }
+        }
+        u ? (cout << "YES\n") : (cout << "NO\n");
     }
-    sortv(temp);
-    int nn = temp.size();
-    REP(i, 0, nn - 1)
-    {
-        ans += abs(temp[i]);
-        ans += abs(temp[i + 1]);
-        i++;
-    }
-    if (temp.size() % 2 == 1)
-    {
-      
-            ans = ans + abs(temp[nn - 1]) - 2*mn;
-        
-    }
-    cout<<ans<<endl;
 }
 
 signed main()

@@ -1,4 +1,4 @@
-// 2024-08-28 20:08:44
+// 2024-08-21 10:20:42
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,42 +107,10 @@ void inifact()
 }
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n);
-    REP(i, 0, n)
-    cin >> a[i];
-    int ans = 0;
-    vi temp;
-    int mn = INF;
-    bool z = false;
-    REP(i, 0, n)
-    {
-        mn = min(mn, abs(a[i]));
-        if (a[i] < 0)
-            temp.pb(a[i]);
-        if (a[i] > 0)
-        {
-            ans += a[i];
-        }
-        if (a[i] == 0)
-            z = true;
-    }
-    sortv(temp);
-    int nn = temp.size();
-    REP(i, 0, nn - 1)
-    {
-        ans += abs(temp[i]);
-        ans += abs(temp[i + 1]);
-        i++;
-    }
-    if (temp.size() % 2 == 1)
-    {
-      
-            ans = ans + abs(temp[nn - 1]) - 2*mn;
-        
-    }
-    cout<<ans<<endl;
+    int a, b, c;
+    cin >> a >> b >> c;
+    int ans = min({c * c, a * b, c * min(a, b)});
+    cout << ans << endl;
 }
 
 signed main()

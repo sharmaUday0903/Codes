@@ -1,4 +1,4 @@
-// 2024-08-28 20:08:44
+// 2024-08-15 01:57:33
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -109,40 +109,22 @@ void solve()
 {
     int n;
     cin >> n;
-    vi a(n);
-    REP(i, 0, n)
-    cin >> a[i];
-    int ans = 0;
-    vi temp;
-    int mn = INF;
-    bool z = false;
+    map<int, int> m;
+    bool u=true;
     REP(i, 0, n)
     {
-        mn = min(mn, abs(a[i]));
-        if (a[i] < 0)
-            temp.pb(a[i]);
-        if (a[i] > 0)
+        int x;
+        cin >> x;
+        if ((m.size() == 0) || (m[x - 1] == 1) || (m[x + 1] == 1))
         {
-            ans += a[i];
+            m[x] = 1;
         }
-        if (a[i] == 0)
-            z = true;
+        else
+        {
+            u=false;
+        }
     }
-    sortv(temp);
-    int nn = temp.size();
-    REP(i, 0, nn - 1)
-    {
-        ans += abs(temp[i]);
-        ans += abs(temp[i + 1]);
-        i++;
-    }
-    if (temp.size() % 2 == 1)
-    {
-      
-            ans = ans + abs(temp[nn - 1]) - 2*mn;
-        
-    }
-    cout<<ans<<endl;
+    u?(cout << "YES\n"):(cout << "NO\n");
 }
 
 signed main()
