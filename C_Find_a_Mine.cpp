@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-09-25 16:49:56
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,32 +105,30 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+int ask(int x, int y)
+{
+    std::cout << "? " << x << " " << y << std::endl;
+    int res;
+    std::cin >> res;
+    return res;
+}
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    int n, m;
+    cin >> n >> m;
+    int a = ask(1, 1);
+    int t1 = max((int)1, a - m + 2);
+    int b = ask(t1, a - t1 + 2);
+    int t2 = max((int)1, 2 + a - n);
+    int c = ask(a + 2 - t2, t2);
+    if (ask(t1 + b / 2, 2 + a - t1 - b / 2) == 0)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        cout << "! " << t1 + b / 2 << " " << 2 + a - t1 - b / 2 << endl;
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
+    else
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        cout << "! " << 2 + a- t2 - c / 2 << " " << t2 + c / 2 << endl;
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
-    {
-        res.pop_back();
-    }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
 }
 
 signed main()

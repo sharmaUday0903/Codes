@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-09-30 10:33:37
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,32 +105,71 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vi parent(maxl);
+vi siz(maxl);
+void make_set(int v)
+{
+    parent[v] = v;
+    siz[v] = 1;
+}
+
+int find_set(int v)
+{
+    if (v == parent[v])
+        return v;
+    return find_set(parent[v]);
+}
+bool union_sets(int a, int b)
+{
+    a = find_set(a);
+    b = find_set(b);
+    if (a == b)
+    {
+        return false;
+    }
+    parent[b] = a;
+    siz[a] += siz[b];
+    return true;
+}
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    int n, m;
+    cin >> n >> m;
+    for (int i = 0; i < n; i++)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        make_set(i);
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
+    vi a(m), d(m), k(m);
+    REP(i, 0, m)
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        cin >> a[i] >> d[i] >> k[i];
+        a[i]--;
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
+    int ans = n;
+    REP(x, 1, 11)
     {
-        res.pop_back();
+        vi f(n);
+        REP(i, 0, m)
+        {
+            if (d[i] == x)
+            {
+                f[a[i]]++;
+                f[a[i] + k[i] * x]--;
+            }
+        }
+        REP(i, x, n)
+        {
+            f[i] += f[i - x];
+        }
+        REP(i, 0, n)
+        {
+            if (f[i])
+            {
+                ans -= union_sets(i, i + x);
+            }
+        }
     }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    cout << ans << endl;
 }
 
 signed main()

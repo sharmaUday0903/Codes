@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-09-24 10:47:41
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,30 +107,42 @@ void inifact()
 }
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
+    int n, m;
+    cin >> n >> m;
+    vi dp(n + 1, 0);
+    multiset<int> l;
+    map<int, int> ll;
+    REP(i, 1, n + 1)
+    ll[i] = 0;
+    map<int, multiset<int>> mp;
+    REP(i, 0, m)
+    {
+        int x, y;
+        cin >> x >> y;
+        ll[x]++;
+        mp[y].insert(x);
+    }
     REP(i, 1, n + 1)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        while (ll[i] != 0)
+        {
+            l.insert(i);
+            ll[i]--;
+        }
+        int p = dp[i - 1];
+        int q = 0;
+        if (l.size())
+            q = l.size() + dp[*l.begin() - 1];
+        dp[i] = max(p, q);
+        if (mp[i].size())
+        {
+            for (auto c : mp[i])
+            {
+                l.erase(l.find(c));
+            }
+        }
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
-    {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
-    }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
-    {
-        res.pop_back();
-    }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    cout << dp[n] << endl;
 }
 
 signed main()

@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-09-25 20:04:00
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -109,28 +109,26 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    vvi adj(n);
+    REP(i, 0, n - 1)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        adj[x].pb(y);
+        adj[y].pb(x);
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
+    int ans = 0;
+    REP(i, 0, n)
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        if (adj[i].size() == 1)
+        {
+            ans+=3;
+
+        }
+        else ans+=2;
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
-    {
-        res.pop_back();
-    }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    cout<<ans<<endl;
 }
 
 signed main()

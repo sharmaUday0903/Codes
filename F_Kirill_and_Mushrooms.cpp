@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-10-03 11:00:23
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -109,28 +109,37 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
-    {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
-    }
-    int sum = 0;
-    string res = "";
+    vi a(n);
+    REP(i, 0, n)
+    cin >> a[i];
+    vi b(n);
+    REP(i, 0, n)
+    cin >> b[i];
+    multiset<int> s;
+    int k = 1;
+    int ans = *max_element(a.begin(), a.end());
     REPREV(i, 1, n + 1)
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        int num = i;
+        s.insert(a[b[num - 1] - 1]);
+        while (s.size() > num)
+            s.erase(s.begin());
+        if (s.size() == num)
+        {
+            int res = num * (*s.begin());
+            if (res > ans)
+            {
+                ans = res;
+                k = num;
+            }
+            else if (res == ans)
+            {
+                k = num;
+            }
+        }
+       
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
-    {
-        res.pop_back();
-    }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    cout << ans << " " << k << endl;
 }
 
 signed main()

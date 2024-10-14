@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-09-23 09:20:51
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,30 +107,19 @@ void inifact()
 }
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    int n, k;
+    cin >> n >> k;
+    int cnto = k / 2;
+    if (n % 2 == 1 && k % 2 == 1)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        cnto++;
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
+    if (cnto % 2 == 1)
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        cout << "NO\n";
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
-    {
-        res.pop_back();
-    }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    else
+        cout << "YES\n";
 }
 
 signed main()

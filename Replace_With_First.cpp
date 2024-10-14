@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-10-09 20:09:15
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,30 +107,56 @@ void inifact()
 }
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    int n, m;
+    cin >> n >> m;
+    string a, b;
+    cin >> a >> b;
+    int i = 0, j = 0;
+    if (n < m)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        cout << -1 << endl;
+        return;
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
+    while (i < n && j < m)
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        if (a[i] == b[j])
+        {
+            i++, j++;
+        }
+        else
+            break;
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
+    if (i == n && j == m)
     {
-        res.pop_back();
+        cout << 0 << endl;
+        return;
     }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    if (j == m)
+    {
+        cout << 1 << endl;
+        return;
+    }
+    if (i == 0 || j == 0)
+    {
+        cout << -1 << endl;
+        return;
+    }
+    if (n == m)
+    {
+        cout << -1 << endl;
+        return;
+    }
+    int dif = n - m;
+    REP(i, 1, m)
+    {
+        string temp = a.substr(0, i) + a.substr(i + dif, m - i);
+        if (temp == b)
+        {
+            cout << 1 << endl;
+            return;
+        }
+    }
+    cout << -1 << endl;
 }
 
 signed main()

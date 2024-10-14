@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-10-08 14:03:18
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -107,30 +107,58 @@ void inifact()
 }
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    int n, m, q;
+    cin >> n >> m >> q;
+    vi a(n), b(m);
+    REP(i, 0, n)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        cin >> a[i];
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
+    REP(i, 0, m)
+    cin >> b[i];
+    int in = 0;
+    map<int, int> mp;
+    int i = 0;
+    while (i < n)
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        if (a[i] == b[in])
+        {
+            mp[a[i]]++;
+            in++;
+            i++;
+        }
+        else if (mp[b[in]])
+        {
+            in++;
+        }
+        else
+        {
+            cout << "TIDAK\n";
+            return;
+        }
+        if (in == m)
+        {
+            cout << "YA\n";
+            return;
+        }
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
+    while (in < m)
     {
-        res.pop_back();
+        if (mp[b[in]])
+            in++;
+        else
+        {
+
+            cout << "TIDAK\n";
+            return;
+        }
+        if (in == m)
+        {
+            cout << "YA\n";
+            return;
+        }
     }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    cout << "TIDAK\n";
 }
 
 signed main()

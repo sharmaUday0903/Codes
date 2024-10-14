@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-10-02 10:34:36
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -105,32 +105,74 @@ void inifact()
         fact[i] %= MOD;
     }
 }
+vi cnt(1e6 + 1);
+int K = 500;
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    int n, q;
+    cin >> n >> q;
+    vi a(n);
+    REP(i, 0, n)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        cin >> a[i];
+        cnt[a[i]] = 0;
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
+    vector<vector<int>> qs(q, vector<int>(3));
+    REP(i, 0, q)
     {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
+        cin >> qs[i][0] >> qs[i][1], qs[i][2] = i;
     }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
+    auto cmp = [&](vi &a, vi &b)
     {
-        res.pop_back();
+        return mp(mp(a[0] / K, a[1] / K), a) < mp(mp(b[0] / K, b[1] / K), b);
+    };
+    sort(qs.begin(), qs.end(), cmp);
+    int l = 0, r = 0;
+    int odd = 1;
+    cnt[a.front()]++;
+    vector<bool> ans(q);
+    for (auto &c : qs)
+    {
+        c[0]--, c[1]--;
+        while (r < c[1])
+        {
+            cnt[a[++r]]++;
+            if (cnt[a[r]] % 2)
+                odd++;
+            else
+                odd--;
+        }
+
+        while (l > c[0])
+        {
+            cnt[a[--l]]++;
+            if (cnt[a[l]] % 2)
+                odd++;
+            else
+                odd--;
+        }
+
+        while (l < c[0])
+        {
+            cnt[a[l]]--;
+            if (cnt[a[l++]] % 2)
+                odd++;
+            else
+                odd--;
+        }
+
+        while (r > c[1])
+        {
+            cnt[a[r]]--;
+            if (cnt[a[r--]] % 2)
+                odd++;
+            else
+                odd--;
+        }
+        ans[c[2]] = odd;
     }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    for (bool c : ans)
+        cout << (c ? "NO\n" : "YES\n");
 }
 
 signed main()

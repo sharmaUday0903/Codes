@@ -1,4 +1,4 @@
-// 2024-09-24 10:40:56
+// 2024-09-30 11:22:37
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -22,7 +22,7 @@ using namespace std;
 
 #define vvi vector<vi>
 const double pi = 3.14159265358979323846;
-const int INF = 1e15;
+const int INF = 1e18 + 1e10;
 const int MOD = 1e9 + 7;
 int rootn(int x, int y)
 {
@@ -109,28 +109,28 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    vi pref(n + 1, 0);
-    REP(i, 1, n + 1)
+    int l = 2, r = INF;
+    int ans = INF;
+    while (l <= r)
     {
-        pref[i] = pref[i - 1] + (s[i - 1] - '0');
+        int m = r - (r - l) / 2;
+        int p = sqrtl(m);
+        int q = m - p;
+        if (q == n)
+        {
+            ans = min(m, ans);
+            r = m - 1;
+        }
+        else if (q > n)
+        {
+            r = m - 1;
+        }
+        else
+        {
+            l = m + 1;
+        }
     }
-    int sum = 0;
-    string res = "";
-    REPREV(i, 1, n + 1)
-    {
-        sum += pref[i];
-        res += (char)(sum % 10 + '0');
-        sum /= 10;
-    }
-    res += (char)(sum % 10 + '0');
-    while (res.back() == '0')
-    {
-        res.pop_back();
-    }
-    reverse(res.begin(), res.end());
-    cout << res << endl;
+    cout << ans << endl;
 }
 
 signed main()
